@@ -1,6 +1,6 @@
 Do zrobienia:
-1. Kwadrat na srodku 
-2. "silnik" - 60 fps 
+mam 1. Kwadrat na srodku
+mam 2. "silnik" - 60 fps 
 3. Samochod wyswietla sie na mapie (x,y,wys,szer,predkosc)
 4. Samochod porusza sie w jakis punkt
 5. Samochod to zdjecie

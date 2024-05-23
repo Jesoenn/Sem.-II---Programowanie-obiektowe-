@@ -11,6 +11,8 @@ public class Silnik extends JPanel {
         setPreferredSize(new Dimension(screenX,screenY));
         setDoubleBuffered(true); //Nie wiem co robi sprawdzic
     }
+    //Tworzenie obiektow
+    Mapa map=new Mapa(this);
     Samochod samochod1= new Samochod(this,50,50);
     Samochod samochod2=new Samochod(this,500,500);
     public void start(){
@@ -32,14 +34,15 @@ public class Silnik extends JPanel {
     }
     public void update(){
         //zrobic petle aktualizujaca tablice samochodow
-        samochod1.update(samochod2.getCurrentX(),samochod2.getCurrentY());
-        samochod2.update(samochod1.getCurrentX(),samochod1.getCurrentY());
+        samochod1.movement(samochod2.getCurrentX(),samochod2.getCurrentY());
+        samochod2.movement(samochod1.getCurrentX(),samochod1.getCurrentY());
     }
     public void paintComponent(Graphics g){
         super.paintComponent(g); //jak to dodaje to ekran sie czysci
         Graphics2D g2d=(Graphics2D) g;
-        samochod1.movement(g2d);
-        samochod2.movement(g2d);
+        map.drawMap(g2d);
+        samochod1.updateOnMap(g2d);
+        samochod2.updateOnMap(g2d);
         //g2d.dispose();
     }
 }

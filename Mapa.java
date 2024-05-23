@@ -40,10 +40,5 @@ public class Mapa {
     }
     public void drawMap(Graphics2D g2d){
         g2d.drawImage(mapImage,0,0,silnik.screenX,silnik.screenY,null);
-//        for(int i=0; i<silnik.squaresY; i++){
-//            for(int j=0; j<silnik.squaresX; j++){
-//                if()
-//            }
-//        }
     }
 }

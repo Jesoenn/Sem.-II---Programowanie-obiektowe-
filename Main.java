@@ -19,6 +19,7 @@ public class Main{
         //Czyszczenie ekranu
         window.getContentPane().removeAll();
         window.repaint(); */
+        silnik.setStartingPositions();
         silnik.start();
 
     }

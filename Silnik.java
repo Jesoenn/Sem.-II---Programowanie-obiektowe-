@@ -4,21 +4,23 @@ import java.util.ArrayList;
 
 public class Silnik extends JPanel {
     public int carsNormalAmount=5; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGŁOWNY
-    public int carsExplosiveAmount,carsTirePopersAmount,nitroAmount,wallAmount; //Liczba wspomnianych rzeczy na mapie
-    final int samochodSize=50;
-    final int screenX=650;
+    public int carsExplosiveAmount,carsTirePopersAmount,nitroAmount,wallAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
+    final int samochodSize=50; //wielkosc samochodu w pixelach
+    final int screenX=650; //rozmiar ekranu
     final int screenY=650;
-    final int squaresX=screenX/samochodSize;
+    final int squaresX=screenX/samochodSize; //podzial ekranu na kwadraty -> potrzebne w klasa Mapa
     final int squaresY=screenY/samochodSize;
     //Tworzenie obiektow
     Mapa map=new Mapa(this);
     ArrayList<Samochod> normalCars=new ArrayList<>();
+    //ponizej do testow
     //Samochod samochod1=new Samochod(this,50,50);
     //Samochod samochod2=new Samochod(this,500,500);
     public Silnik(){
         setPreferredSize(new Dimension(screenX,screenY));
-        setDoubleBuffered(true); //Nie wiem co robi sprawdzic
+        setDoubleBuffered(true); //rysowanie wszystkiego jednoczesnie na ekranie
     }
+    //ustawienie pozycji startowych (na razie dla samochodow zwyklych)
     public void setStartingPositions(){
         int[][] startingMap=map.map;
         //Przejscie przez kazde pole na mapie i stworzenie odpowiednich obiektow
@@ -30,8 +32,9 @@ public class Silnik extends JPanel {
             }
         }
     }
+    //rozpoczecie symulacji
     public void start(){
-        double frameTime=16.66667; //60FPS - 1/60s
+        double frameTime=16.66667; //60FPS - 1/60*1000ms
         double nextFrame=System.currentTimeMillis()+frameTime; //kiedy nastepna klatka
         double timeLeft; //czas pozostaly do nastepnej klatki
         while(true){
@@ -47,7 +50,16 @@ public class Silnik extends JPanel {
             repaint();
         }
     }
+    //zaktualiziowanie obecnego stanu rozgrywki
     public void gameStateUpdate(){
+        Samochod targetCar;
+        for(Samochod normalCar: normalCars){
+            if(normalCar.carId==normalCar.targetId){
+                normalCar.findTarget();
+            }
+            targetCar=normalCars.get(normalCar.targetId);
+            normalCar.movement(targetCar.x, targetCar.y);
+        }
         //zrobic petle aktualizujaca tablice samochodow
         //2 komentarze ponizej to jest jazdy samochodow w swoja strone
         //samochod1.movement(samochod2.getCurrentX(),samochod2.getCurrentY());

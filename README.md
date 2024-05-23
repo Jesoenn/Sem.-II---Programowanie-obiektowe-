@@ -10,9 +10,10 @@ Do zrobienia:
 9. Dodanie tla do mapy | MAM
 10. Podzielenie mapy na kwadraty
 11. tablica dwuwymiarowa z zapelnieniem mapy - defaultowo 0
-12. Losowe wygenerowanie scian (długość - 2 kwadraty) w losowym kierunku
-13. Generowanie samochodow w pustych kwadratach
-14. Stworzenie klas nitro i sciana
+12. Generowanie samochodow jako ArrayList chyba w pustych kwadratach - w Main losowanie liczby samochodow
+13. Stworzenie klas samochod i nitro
+14. Losowe wygenerowanie scian (długość - 2 kwadraty) w losowym kierunku
+16. Wjazd w sciane = stop - bez omijania na razie
 
 Sciana= 1 na mapie
 Nitro=2 na mapie

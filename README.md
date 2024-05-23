@@ -11,7 +11,7 @@ Do zrobienia:
 10. Podzielenie mapy na kwadraty
 11. tablica dwuwymiarowa z zapelnieniem mapy - defaultowo 0
 12. Generowanie samochodow jako ArrayList chyba w pustych kwadratach - w Main losowanie liczby samochodow
-13. Stworzenie klas samochod i nitro
+13. Stworzenie klas sciana i nitro
 14. Losowe wygenerowanie scian (długość - 2 kwadraty) w losowym kierunku
 16. Wjazd w sciane = stop - bez omijania na razie
 

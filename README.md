@@ -12,9 +12,10 @@ Do zrobienia:
 11. tablica dwuwymiarowa z zapelnieniem mapy - defaultowo 0 | MAM
 12. Zapelnienie mapy samochodamizwyklymi | MAM
 13. Tworzenie samochodow na podstawie zmiennej map w Mapa - ArrayList | MAM!!!!!
-14. Stworzenie klas sciana i nitro
-15. Losowe wygenerowanie scian (długość - 2 kwadraty) w losowym kierunku
-16. Wjazd w sciane = stop - bez omijania na razie
+14. Poruszanie sie samochodow w swoja strone - losowe wybranie
+15. Stworzenie klas sciana i nitro
+16. Losowe wygenerowanie scian (długość - 2 kwadraty) w losowym kierunku
+17. Wjazd w sciane = stop - bez omijania na razie
 
 Sciana= 1 na mapie
 Nitro=2 na mapie

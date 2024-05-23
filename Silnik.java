@@ -11,7 +11,8 @@ public class Silnik extends JPanel {
         setPreferredSize(new Dimension(screenX,screenY));
         setDoubleBuffered(true); //Nie wiem co robi sprawdzic
     }
-    Samochod samochod1= new Samochod(this);
+    Samochod samochod1= new Samochod(this,50,50);
+    Samochod samochod2=new Samochod(this,500,500);
     public void start(){
         double frameTime=16.66667; //60FPS - 1/60s
         double nextFrame=System.currentTimeMillis()+frameTime; //kiedy nastepna klatka
@@ -30,12 +31,15 @@ public class Silnik extends JPanel {
         }
     }
     public void update(){
-        samochod1.update();
+        //zrobic petle aktualizujaca tablice samochodow
+        samochod1.update(samochod2.getCurrentX(),samochod2.getCurrentY());
+        samochod2.update(samochod1.getCurrentX(),samochod1.getCurrentY());
     }
     public void paintComponent(Graphics g){
-        super.paintComponent(g); //jak to dodaje to ekran sie czysci?
+        super.paintComponent(g); //jak to dodaje to ekran sie czysci
         Graphics2D g2d=(Graphics2D) g;
         samochod1.movement(g2d);
+        samochod2.movement(g2d);
         //g2d.dispose();
     }
 }

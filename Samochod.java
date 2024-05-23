@@ -1,22 +1,28 @@
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.util.Random;
 
 public class Samochod {
-    public int x,y,prevX,prevY;
-    public int celX,celY;
+    public static int carCount=0;   //ile samochodow
+    public int carId,targetId;
+    boolean targetIdReached=false; //przy kolizji zmieniam na true
+    public int x,y,prevX,prevY; //Polozenie samochodu i polozenie w poprzedniej klatce
     public int waga,speed;
-    String facing;
-    public Image currentImage,up,right,down,left;
+    public Image up,right,down,left;
     Silnik silnik;
-    public Samochod(Silnik silnik){
+    Random generateNumber=new Random();
+    public Samochod(Silnik silnik,int givenX, int givenY){
         this.silnik=silnik;
         //tymczasowo, zrobic losowo, zeby nic na siebie nie nachodzilo - najpierw generowana map
-        prevY=y=60;
-        prevX=x=20;
+        prevY=y=givenY;
+        prevX=x=givenX;
         waga=1500;
-        speed=waga/500;
-        facing="up";
+        speed=waga/300;
+        //Koncowe, nie zmieniac
         downloadImages();
+        carCount++;
+        carId=carCount;
+        targetId=carId;
     }
     public void downloadImages(){
         try{
@@ -28,11 +34,22 @@ public class Samochod {
             e.printStackTrace();
         }
     }
-    public void update(){
-        if(x<600)
+    public void update(int targetX, int targetY){
+        if(targetIdReached){ //jezeli cel zostal zaatakowany, to szukamy nowego celu
+            targetId=carId;
+            targetIdReached=false;
+        }
+        while(targetId==carId){
+            targetId=generateNumber.nextInt(carCount)+1;
+        }
+        if(x>targetX && x>0)
+            x-=speed;
+        else if(x<targetX && x<silnik.screenX)
             x+=speed;
-        if(y<600)
-          y+=speed;
+        if(y>targetY && y>0)
+            y-=speed;
+        else if(y<targetY && y<silnik.screenY)
+            y+=speed;
     }
     public void movement(Graphics2D g2d){
         if(prevY>y)
@@ -43,5 +60,11 @@ public class Samochod {
             g2d.drawImage(left,x,y,silnik.samochodSize,silnik.samochodSize,null);
         else if(prevX<x)
             g2d.drawImage(right,x,y,silnik.samochodSize,silnik.samochodSize,null);
+    }
+    public int getCurrentX(){
+        return x;
+    }
+    public int getCurrentY(){
+        return y;
     }
 }

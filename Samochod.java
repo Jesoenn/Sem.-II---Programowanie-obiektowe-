@@ -17,7 +17,7 @@ public class Samochod {
         prevY=y=givenY;
         prevX=x=givenX;
         waga=1500;
-        speed=waga/300;
+        speed=waga/750;
         //Koncowe, nie zmieniac
         downloadImages();
         carCount++;
@@ -34,7 +34,7 @@ public class Samochod {
             e.printStackTrace();
         }
     }
-    public void update(int targetX, int targetY){
+    public void movement(int targetX, int targetY){
         if(targetIdReached){ //jezeli cel zostal zaatakowany, to szukamy nowego celu
             targetId=carId;
             targetIdReached=false;
@@ -51,7 +51,7 @@ public class Samochod {
         else if(y<targetY && y<silnik.screenY)
             y+=speed;
     }
-    public void movement(Graphics2D g2d){
+    public void updateOnMap(Graphics2D g2d){
         if(prevY>y)
             g2d.drawImage(up,x,y,silnik.samochodSize,silnik.samochodSize,null);
         else if(prevY<y)
@@ -60,6 +60,9 @@ public class Samochod {
             g2d.drawImage(left,x,y,silnik.samochodSize,silnik.samochodSize,null);
         else if(prevX<x)
             g2d.drawImage(right,x,y,silnik.samochodSize,silnik.samochodSize,null);
+        if(prevX==x && prevY==y){
+            g2d.drawImage(up,x,y,silnik.samochodSize,silnik.samochodSize,null);
+        }
     }
     public int getCurrentX(){
         return x;

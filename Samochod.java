@@ -11,6 +11,7 @@ public class Samochod {
     public Image up,right,down,left; //Zdjecia samochodu obroconego w rozne strony
     Silnik silnik;
     Random generateNumber=new Random();
+    Rectangle hitbox; // DO ZROBIENIA HITBOXY INTERSECTS
     public Samochod(Silnik silnik,int givenX, int givenY){
         this.silnik=silnik;
         //tymczasowo, zrobic losowo, zeby nic na siebie nie nachodzilo - najpierw generowana map

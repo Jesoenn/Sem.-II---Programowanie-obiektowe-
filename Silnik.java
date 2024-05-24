@@ -13,6 +13,7 @@ public class Silnik extends JPanel {
     //Tworzenie obiektow
     Mapa map=new Mapa(this);
     ArrayList<Samochod> normalCars=new ArrayList<>();
+    ArrayList<Sciana> walls=new ArrayList<>(); //JESZCZE NIC NIE MA
     //ponizej do testow
     //Samochod samochod1=new Samochod(this,50,50);
     //Samochod samochod2=new Samochod(this,500,500);
@@ -27,7 +28,10 @@ public class Silnik extends JPanel {
         for(int i=0; i<squaresY; i++){
             for(int j=0; j<squaresX; j++){
                 if(startingMap[i][j]==3){
-                    normalCars.add(new Samochod(this,i*samochodSize,j*samochodSize));
+                    normalCars.add(new Samochod(this,j*samochodSize,i*samochodSize));
+                }
+                if(startingMap[i][j]==1){
+                    walls.add(new Sciana(this,j*samochodSize,i*samochodSize));
                 }
             }
         }
@@ -71,6 +75,9 @@ public class Silnik extends JPanel {
         map.drawMap(g2d);
         for(Samochod normalCar: normalCars){
             normalCar.updateOnMap(g2d);
+        }
+        for(Sciana wall: walls){
+            wall.generateOnMap(g2d);
         }
     }
 }

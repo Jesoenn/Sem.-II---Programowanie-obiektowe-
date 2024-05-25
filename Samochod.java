@@ -8,15 +8,15 @@ public class Samochod {
     boolean targetIdReached=false; //przy kolizji zmieniam na true
     public int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
     public int waga,speed;
-    public int Hp; // Punkty zycia
-    public double TurningAngle; // promien skretu
-    public boolean Tires; // stan opon samochodu(narazie tak ze jak raz sie uszkodzi to zmiana na bool'u i potem przy uszkodzeniu nic sie wiecej nie zmienia)
+    public int hp; // Punkty zycia
+    public double turningAngle; // promien skretu
+    public boolean tires; // stan opon samochodu(narazie tak ze jak raz sie uszkodzi to zmiana na bool'u i potem przy uszkodzeniu nic sie wiecej nie zmienia)
     public Image up,right,down,left; //Zdjecia samochodu obroconego w rozne strony
     Derby derby;
     Random generateNumber=new Random();
     public Rectangle hitbox; // DO ZROBIENIA HITBOXY INTERSECTS
     public boolean collisionDetected=false;
-    public int BodyCount; // ile samochodow pokonal dany samochod
+    public int bodyCount; // ile samochodow pokonal dany samochod
     public Samochod(Derby derby, int givenX, int givenY){
         this.derby = derby;
         //tymczasowo, zrobic losowo, zeby nic na siebie nie nachodzilo - najpierw generowana map
@@ -24,7 +24,7 @@ public class Samochod {
         prevX=x=givenX;
         waga=1500;
         speed=waga/750;
-        Hp = 100;
+        hp = 100;
         //ponizej koncowe, nie zmieniac
         downloadImages();
         hitbox=new Rectangle(x,y,derby.samochodSize,derby.samochodSize);

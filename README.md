@@ -17,7 +17,7 @@ Do zrobienia:
 16. Losowe wygenerowanie scian (długość - 2 kwadraty) w losowym kierunku | MAM z malym bugiem ale sie napraw
     16a) bug fixed, dadana rotacja ścian
 18. Wjazd w sciane = stop - bez omijania na razie
-19. nitro
+19. nitro | JEST
 
 Sciana= 1 na mapie
 Nitro=2 na mapie

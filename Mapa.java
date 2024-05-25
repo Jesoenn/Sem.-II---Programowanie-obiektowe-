@@ -3,17 +3,17 @@ import java.awt.*;
 import java.util.Random;
 
 public class Mapa {
-    Image mapImage; //Zdjecie tła mapy
-    Derby derby;
-    int[][] map; //Miejsca, w ktorych moga byc generowane Sciany,Nitra,Samochody
+    private Image mapImage; //Zdjecie tła mapy
+    private Derby derby;
+    private int[][] map; //Miejsca, w ktorych moga byc generowane Sciany,Nitra,Samochody
     public Mapa(Derby derby){
         this.derby = derby;
         map=new int[derby.squaresY][derby.squaresX]; // wiersze/kolumny
         downloadImages();
-        generateLocation(derby.carsNormalAmount,3);
-        generateWallsLocation(5);
+        generateLocation(derby.getCarsNormalAmount(),3);
+        generateWallsLocation(derby.getWallsAmount());
     }
-    public void downloadImages(){
+    private void downloadImages(){
         try{
             mapImage=ImageIO.read(getClass().getResource("/mapa.png"));
         }catch(Exception e){
@@ -21,7 +21,7 @@ public class Mapa {
         }
     }
     //Generowanie miejsca na mapie dla wszystkich samochodów i nitro
-    public void generateLocation(int amount, int symbol){ //symbol - oznaczenie na mapie
+    private void generateLocation(int amount, int symbol){ //symbol - oznaczenie na mapie
         Random location=new Random();
         int row=location.nextInt(derby.squaresY);
         int column=location.nextInt(derby.squaresY);
@@ -46,7 +46,7 @@ public class Mapa {
 0100000000000
 0000000000000
      */
-    public void generateWallsLocation(int amount){
+    private void generateWallsLocation(int amount){
         Random location=new Random();
         boolean keepGenerating=false;
         int row=location.nextInt(derby.squaresY);
@@ -94,6 +94,9 @@ public class Mapa {
             }
             System.out.println();
         }
+    }
+    public int[][] getMap(){
+        return map;
     }
     public void drawMap(Graphics2D g2d){
         g2d.drawImage(mapImage,0,0, derby.screenX, derby.screenY,null);

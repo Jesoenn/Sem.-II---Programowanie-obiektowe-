@@ -3,17 +3,18 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Derby extends JPanel {
-    public int carsNormalAmount=5; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGŁOWNY
-    public int carsExplosiveAmount,carsTirePopersAmount,nitroAmount,wallAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
-    final int samochodSize=50; //wielkosc samochodu w pixelach
-    final int screenX=650; //rozmiar ekranu
-    final int screenY=650;
-    final int squaresX=screenX/samochodSize; //podzial ekranu na kwadraty -> potrzebne w klasa Mapa
-    final int squaresY=screenY/samochodSize;
+    private int carsNormalAmount=5; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGŁOWNY
+    private int wallsAmount=5;
+    private int carsExplosiveAmount,carsTirePopersAmount,nitroAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
+    public static final int samochodSize=50; //wielkosc samochodu w pixelach
+    public static final int screenX=650; //rozmiar ekranu
+    public static final int screenY=650;
+    public static final int squaresX=screenX/samochodSize; //podzial ekranu na kwadraty -> potrzebne w klasa Mapa
+    public static final int squaresY=screenY/samochodSize;
     //Tworzenie obiektow
-    Mapa map=new Mapa(this);
-    ArrayList<Samochod> normalCars=new ArrayList<>();
-    ArrayList<Sciana> walls=new ArrayList<>();
+    public Mapa map=new Mapa(this);
+    public ArrayList<Samochod> normalCars=new ArrayList<>();
+    public ArrayList<Sciana> walls=new ArrayList<>();
     //ponizej do testow
     //Samochod samochod1=new Samochod(this,50,50);
     //Samochod samochod2=new Samochod(this,500,500);
@@ -23,7 +24,7 @@ public class Derby extends JPanel {
     }
     //ustawienie pozycji startowych (na razie dla samochodow zwyklych)
     public void setStartingPositions(){
-        int[][] startingMap=map.map;
+        int[][] startingMap=map.getMap();
         //Przejscie przez kazde pole na mapie i stworzenie odpowiednich obiektow
         for(int i=0; i<squaresY; i++){
             for(int j=0; j<squaresX; j++){
@@ -61,14 +62,14 @@ public class Derby extends JPanel {
     public void gameStateUpdate(){
         Samochod targetCar;
         for(Samochod normalCar: normalCars){
-            if(normalCar.carId==normalCar.targetId){
+            if(normalCar.getCarId()==normalCar.targetId){
                 normalCar.findTarget();
             }
             targetCar=normalCars.get(normalCar.targetId);
-            normalCar.movement(targetCar.x, targetCar.y);
+            normalCar.movement(targetCar.getCurrentX(), targetCar.getCurrentY());
             for(Sciana wall: walls){
                 if(normalCar.hitbox.intersects(wall.hitbox)){
-                    normalCar.speed=0;
+                    normalCar.setSpeed(0);
                 }
             }
         }
@@ -87,5 +88,11 @@ public class Derby extends JPanel {
         for(Sciana wall: walls){
             wall.generateOnMap(g2d);
         }
+    }
+    public int getWallsAmount(){
+        return wallsAmount;
+    }
+    public int getCarsNormalAmount(){
+        return carsNormalAmount;
     }
 }

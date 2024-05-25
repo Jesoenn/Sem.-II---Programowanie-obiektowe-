@@ -2,13 +2,13 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 
 public class Sciana {
-    public static int countSciany=1;
-    public int id;
-    Derby derby;
-    Image wallHorizontal,wallVertical;
-    public int x, y;
-    String facing;
-    Rectangle hitbox; // DO ZROBIENIA dac ze jak cos wjedzie w sciane to speed=0 I Zobacyzm
+    private static int countSciany=1;
+    private int id;
+    private Derby derby;
+    private Image wallHorizontal,wallVertical;
+    private int x, y;
+    private String facing;
+    public Rectangle hitbox; // DO ZROBIENIA dac ze jak cos wjedzie w sciane to speed=0 I Zobacyzm
     public Sciana(Derby derby, int x, int y, String facing){
         id=countSciany;
         countSciany++;
@@ -19,7 +19,7 @@ public class Sciana {
         this.facing=facing;
         hitbox=new Rectangle(x,y,derby.samochodSize,derby.samochodSize);
     }
-    public void downloadImages(){
+    private void downloadImages(){
         try{
             wallHorizontal= ImageIO.read(getClass().getResource("/wallHorizontal.png"));
             wallVertical=ImageIO.read(getClass().getResource("/wallVertical.png"));
@@ -32,5 +32,8 @@ public class Sciana {
             g2d.drawImage(wallVertical,x,y,derby.samochodSize,derby.samochodSize,null);
         else if(facing=="horizontal")
             g2d.drawImage(wallHorizontal,x,y,derby.samochodSize,derby.samochodSize,null);
+    }
+    public int getId(){
+        return id;
     }
 }

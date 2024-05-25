@@ -3,13 +3,11 @@ import java.awt.*;
 import javax.imageio.ImageIO;
 
 public class Nitro {
-    int predkosc;
-    public static int countNitro = 1;
-    int id;
-    int czas;
-    int x, y;
-    Image nitro;
-    Derby derby;
+    private int speed;
+    private static int countNitro = 1;
+    private int id,czas,x,y;
+    private Image nitro;
+    private Derby derby;
     public Nitro(int x, int y, int time)
     {
         id = countNitro;
@@ -19,7 +17,7 @@ public class Nitro {
         this.czas = time;
         downloadImages();
     }
-    public void downloadImages()
+    private void downloadImages()
     {
         try
         {

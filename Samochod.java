@@ -9,7 +9,7 @@ public class Samochod {
     public int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
     public int waga,speed;
     public int Hp; // Punkty zycia
-    public int TurningAngle; // promien skretu
+    public double TurningAngle; // promien skretu
     public boolean Tires; // stan opon samochodu(narazie tak ze jak raz sie uszkodzi to zmiana na bool'u i potem przy uszkodzeniu nic sie wiecej nie zmienia)
     public Image up,right,down,left; //Zdjecia samochodu obroconego w rozne strony
     Derby derby;

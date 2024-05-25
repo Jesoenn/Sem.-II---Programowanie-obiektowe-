@@ -8,6 +8,7 @@ public class Samochod {
     boolean targetIdReached=false; //przy kolizji zmieniam na true
     public int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
     public int waga,speed;
+    public int Hp; // Punkty zycia
     public Image up,right,down,left; //Zdjecia samochodu obroconego w rozne strony
     Derby derby;
     Random generateNumber=new Random();
@@ -20,6 +21,7 @@ public class Samochod {
         prevX=x=givenX;
         waga=1500;
         speed=waga/750;
+        Hp = 100;
         //ponizej koncowe, nie zmieniac
         downloadImages();
         hitbox=new Rectangle(x,y,derby.samochodSize,derby.samochodSize);

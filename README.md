@@ -16,10 +16,11 @@ Do zrobienia:
 15. Stworzenie klas sciana | MAM
 16. Losowe wygenerowanie scian (długość - 2 kwadraty) w losowym kierunku | MAM z malym bugiem ale sie napraw
     16a) bug fixed, dadana rotacja ścian
-18. Wjazd w sciane = stop - bez omijania na razie
+18. Wjazd w sciane = stop - bez omijania na razie | MAM
 19. nitro | JEST
 
-Sciana= 1 na mapie
+Sciana pionowa = 1 na mapie
+Sciana pozioma = 2 na mapie
 Nitro=2 na mapie
 SamochodZwykly=3 na mapie
 SamochodWybuchowy=4 na mapie

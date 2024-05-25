@@ -75,12 +75,12 @@ public class Mapa {
             }
             else if(facing==2){
                 if(column>0 && column<silnik.squaresX-1 && map[row][column-1]==0){
-                    map[row][column]=1;
-                    map[row][column-1]=1;
+                    map[row][column]=2;
+                    map[row][column-1]=2;
                 }
-                else if(column==0 && map[row][column+1]==1){
-                    map[row][column]=1;
-                    map[row][column+1]=1;
+                else if(column==0 && map[row][column+1]==0){
+                    map[row][column]=2;
+                    map[row][column+1]=2;
                 }
                 else{
                     keepGenerating=true;

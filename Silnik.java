@@ -30,8 +30,11 @@ public class Silnik extends JPanel {
                 if(startingMap[i][j]==3){
                     normalCars.add(new Samochod(this,j*samochodSize,i*samochodSize));
                 }
-                if(startingMap[i][j]==1){
-                    walls.add(new Sciana(this,j*samochodSize,i*samochodSize));
+                else if(startingMap[i][j]==1){
+                    walls.add(new Sciana(this,j*samochodSize,i*samochodSize,"vertical"));
+                }
+                else if(startingMap[i][j]==2){
+                    walls.add(new Sciana(this,j*samochodSize,i*samochodSize,"horizontal"));
                 }
             }
         }

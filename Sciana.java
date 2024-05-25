@@ -7,25 +7,31 @@ public class Sciana {
     public static int countSciany=1;
     public int id;
     Silnik derby;
-    Image wall;
+    Image wallHorizontal,wallVertical;
     public int x, y;
+    String facing;
     Rectangle hitbox; // DO ZROBIENIA dac ze jak cos wjedzie w sciane to speed=0 I Zobacyzm
-    public Sciana(Silnik derby,int x, int y){
+    public Sciana(Silnik derby,int x, int y, String facing){
         id=countSciany;
         countSciany++;
         downloadImages();
         this.x=x;
         this.y=y;
         this.derby=derby;
+        this.facing=facing;
     }
     public void downloadImages(){
         try{
-            wall= ImageIO.read(getClass().getResource("/wall.png"));
+            wallHorizontal= ImageIO.read(getClass().getResource("/wallHorizontal.png"));
+            wallVertical=ImageIO.read(getClass().getResource("/wallVertical.png"));
         }catch(Exception e){
             e.printStackTrace();
         }
     }
     public void generateOnMap(Graphics2D g2d){
-        g2d.drawImage(wall,x,y,derby.samochodSize,derby.samochodSize,null);
+        if(facing=="vertical")
+            g2d.drawImage(wallVertical,x,y,derby.samochodSize,derby.samochodSize,null);
+        else if(facing=="horizontal")
+            g2d.drawImage(wallHorizontal,x,y,derby.samochodSize,derby.samochodSize,null);
     }
 }

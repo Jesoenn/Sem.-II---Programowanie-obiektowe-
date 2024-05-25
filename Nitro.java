@@ -4,7 +4,7 @@ import javax.imageio.ImageIO;
 
 public class Nitro {
     int predkosc;
-    public static int CountNitro = 1;
+    public static int countNitro = 1;
     int id;
     int czas;
     int x, y;
@@ -12,8 +12,8 @@ public class Nitro {
     Derby derby;
     public Nitro(int x, int y, int time)
     {
-        id = CountNitro;
-        CountNitro++;
+        id = countNitro;
+        countNitro++;
         this.x = x;
         this.y = y;
         this.czas = time;

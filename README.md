@@ -18,6 +18,7 @@ Do zrobienia:
     16a) bug fixed, dadana rotacja ścian
 18. Wjazd w sciane = stop - bez omijania na razie | MAM
 19. nitro | JEST
+20. klasy pochodne od klasy Samochod | JEST (narazie bez rozpisanych metod bo trzeba dokonczyc inne na np. utrate zycia) 
 
 Sciana pionowa = 1 na mapie
 Sciana pozioma = 2 na mapie

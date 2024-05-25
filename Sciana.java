@@ -1,17 +1,15 @@
-import org.w3c.dom.css.Rect;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 
 public class Sciana {
     public static int countSciany=1;
     public int id;
-    Silnik derby;
+    Derby derby;
     Image wallHorizontal,wallVertical;
     public int x, y;
     String facing;
     Rectangle hitbox; // DO ZROBIENIA dac ze jak cos wjedzie w sciane to speed=0 I Zobacyzm
-    public Sciana(Silnik derby,int x, int y, String facing){
+    public Sciana(Derby derby, int x, int y, String facing){
         id=countSciany;
         countSciany++;
         downloadImages();
@@ -19,6 +17,7 @@ public class Sciana {
         this.y=y;
         this.derby=derby;
         this.facing=facing;
+        hitbox=new Rectangle(x,y,derby.samochodSize,derby.samochodSize);
     }
     public void downloadImages(){
         try{

@@ -1,5 +1,5 @@
 public class Nitro {
-    Silnik silnik;
+    Derby derby;
     public Nitro(){
 
     }

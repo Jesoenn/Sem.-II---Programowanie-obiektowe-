@@ -4,13 +4,13 @@ import java.util.Random;
 
 public class Mapa {
     Image mapImage; //Zdjecie tła mapy
-    Silnik silnik;
+    Derby derby;
     int[][] map; //Miejsca, w ktorych moga byc generowane Sciany,Nitra,Samochody
-    public Mapa(Silnik silnik){
-        this.silnik=silnik;
-        map=new int[silnik.squaresY][silnik.squaresX]; // wiersze/kolumny
+    public Mapa(Derby derby){
+        this.derby = derby;
+        map=new int[derby.squaresY][derby.squaresX]; // wiersze/kolumny
         downloadImages();
-        generateLocation(silnik.carsNormalAmount,3);
+        generateLocation(derby.carsNormalAmount,3);
         generateWallsLocation(5);
     }
     public void downloadImages(){
@@ -23,12 +23,12 @@ public class Mapa {
     //Generowanie miejsca na mapie dla wszystkich samochodów i nitro
     public void generateLocation(int amount, int symbol){ //symbol - oznaczenie na mapie
         Random location=new Random();
-        int row=location.nextInt(silnik.squaresY);
-        int column=location.nextInt(silnik.squaresY);
+        int row=location.nextInt(derby.squaresY);
+        int column=location.nextInt(derby.squaresY);
         for(int i=0; i<amount; i++){
             while(map[row][column]!=0){
-                row=location.nextInt(silnik.squaresY);
-                column=location.nextInt(silnik.squaresY);
+                row=location.nextInt(derby.squaresY);
+                column=location.nextInt(derby.squaresY);
             }
             map[row][column]=symbol;
         }
@@ -49,18 +49,18 @@ public class Mapa {
     public void generateWallsLocation(int amount){
         Random location=new Random();
         boolean keepGenerating=false;
-        int row=location.nextInt(silnik.squaresY);
-        int column=location.nextInt(silnik.squaresY);
+        int row=location.nextInt(derby.squaresY);
+        int column=location.nextInt(derby.squaresY);
         int facing=location.nextInt(2)+1; //1 pionowa | 2 pozioma
         for(int i=0; i<amount; i++){
             while(map[row][column]!=0 || keepGenerating==true){
-                row=location.nextInt(silnik.squaresY);
-                column=location.nextInt(silnik.squaresY);
+                row=location.nextInt(derby.squaresY);
+                column=location.nextInt(derby.squaresY);
                 facing=location.nextInt(2)+1;
                 keepGenerating=false;
             }
             if(facing==1){ //sciana pionowa
-                if(row>0 && row<=silnik.squaresY-1 && map[row-1][column]==0){
+                if(row>0 && row<= derby.squaresY-1 && map[row-1][column]==0){
                     map[row][column]=1;
                     map[row-1][column]=1;
                 }
@@ -74,7 +74,7 @@ public class Mapa {
                 }
             }
             else if(facing==2){
-                if(column>0 && column<silnik.squaresX-1 && map[row][column-1]==0){
+                if(column>0 && column< derby.squaresX-1 && map[row][column-1]==0){
                     map[row][column]=2;
                     map[row][column-1]=2;
                 }
@@ -88,14 +88,14 @@ public class Mapa {
                 }
             }
         }
-        for(int i=0; i<silnik.squaresY; i++){
-            for(int j=0; j<silnik.squaresX; j++){
+        for(int i = 0; i< derby.squaresY; i++){
+            for(int j = 0; j< derby.squaresX; j++){
                 System.out.print(map[i][j]);
             }
             System.out.println();
         }
     }
     public void drawMap(Graphics2D g2d){
-        g2d.drawImage(mapImage,0,0,silnik.screenX,silnik.screenY,null);
+        g2d.drawImage(mapImage,0,0, derby.screenX, derby.screenY,null);
     }
 }

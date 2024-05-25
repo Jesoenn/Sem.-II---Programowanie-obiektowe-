@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 
 public class Main{
     public static void main(String[] args) {
@@ -9,8 +8,8 @@ public class Main{
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setTitle("Derby samochodowe");
 
-        Silnik silnik=new Silnik();
-        window.add(silnik);
+        Derby derby =new Derby();
+        window.add(derby);
         window.pack();
         window.setVisible(true);
         /* EKRAN STARTOWY Z WYBORAMI, POKI CO USELESS
@@ -19,8 +18,8 @@ public class Main{
         //Czyszczenie ekranu
         window.getContentPane().removeAll();
         window.repaint(); */
-        silnik.setStartingPositions();
-        silnik.start();
+        derby.setStartingPositions();
+        derby.start();
 
     }
 }

@@ -9,11 +9,12 @@ public class Samochod {
     public int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
     public int waga,speed;
     public Image up,right,down,left; //Zdjecia samochodu obroconego w rozne strony
-    Silnik silnik;
+    Derby derby;
     Random generateNumber=new Random();
-    Rectangle hitbox; // DO ZROBIENIA HITBOXY INTERSECTS
-    public Samochod(Silnik silnik,int givenX, int givenY){
-        this.silnik=silnik;
+    public Rectangle hitbox; // DO ZROBIENIA HITBOXY INTERSECTS
+    public boolean collisionDetected=false;
+    public Samochod(Derby derby, int givenX, int givenY){
+        this.derby = derby;
         //tymczasowo, zrobic losowo, zeby nic na siebie nie nachodzilo - najpierw generowana map
         prevY=y=givenY;
         prevX=x=givenX;
@@ -21,6 +22,7 @@ public class Samochod {
         speed=waga/750;
         //ponizej koncowe, nie zmieniac
         downloadImages();
+        hitbox=new Rectangle(x,y,derby.samochodSize,derby.samochodSize);
         carId=carCount;
         carCount++;
         targetId=carId;
@@ -52,25 +54,26 @@ public class Samochod {
         if(x>targetX && x>0){
             x-=speed;
         }
-        else if(x<targetX && x<silnik.screenX)
+        else if(x<targetX && x< derby.screenX)
             x+=speed;
         if(y>targetY && y>0)
             y-=speed;
-        else if(y<targetY && y<silnik.screenY)
+        else if(y<targetY && y< derby.screenY)
             y+=speed;
+        hitbox.setLocation(x,y);
     }
     //Aktualizacja zdjecia na ekranie
     public void updateOnMap(Graphics2D g2d){
         if(prevY>y)
-            g2d.drawImage(up,x,y,silnik.samochodSize,silnik.samochodSize,null);
+            g2d.drawImage(up,x,y, derby.samochodSize, derby.samochodSize,null);
         else if(prevY<y)
-            g2d.drawImage(down,x,y,silnik.samochodSize,silnik.samochodSize,null);
+            g2d.drawImage(down,x,y, derby.samochodSize, derby.samochodSize,null);
         else if(prevX>x)
-            g2d.drawImage(left,x,y,silnik.samochodSize,silnik.samochodSize,null);
+            g2d.drawImage(left,x,y, derby.samochodSize, derby.samochodSize,null);
         else if(prevX<x)
-            g2d.drawImage(right,x,y,silnik.samochodSize,silnik.samochodSize,null);
+            g2d.drawImage(right,x,y, derby.samochodSize, derby.samochodSize,null);
         else if(prevX==x && prevY==y){
-            g2d.drawImage(up,x,y,silnik.samochodSize,silnik.samochodSize,null);
+            g2d.drawImage(up,x,y, derby.samochodSize, derby.samochodSize,null);
         }
     }
 }

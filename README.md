@@ -23,7 +23,7 @@ Do zrobienia:
 
 Sciana pionowa = 1 na mapie
 Sciana pozioma = 2 na mapie
-Nitro=2 na mapie
 SamochodZwykly=3 na mapie
 SamochodWybuchowy=4 na mapie
 Oponowy=5  na mapie
+Nitro = 6 na mapie

@@ -7,7 +7,7 @@ public class Samochod {
     private int carId;
     public int targetId; //id samochodu (od 0), id celu, do którego będzie się poruszać
     public boolean targetIdReached=false; //przy kolizji zmieniam na true
-    private int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
+    protected int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
     private int waga,speed;
     private int hp; // Punkty zycia
     private double turningAngle; // promien skretu

@@ -19,7 +19,14 @@ Do zrobienia:
 18. Wjazd w sciane = stop - bez omijania na razie | MAM
 19. nitro | JEST
 20. klasy pochodne od klasy Samochod | JEST (narazie bez rozpisanych metod bo trzeba dokonczyc inne na np. utrate zycia)
-21. interakcja nitra z samochodem
+21. po zderzeniu ze sciana zmiana celu na losowe pole na mapie (nie sciana)
+22. jak dojedzie do pola to szuka nowego celu samochodu
+23. zderzenie z samochodem=nowy cel auto
+25. dodac hp
+26. zderzenie z fura -HP dla fury z ktora sie zderzyl, dla samochodu zderzajacego 3 razy mniej obrazen
+27. 0HP=stoi w miejscu
+28. dodanie zeby jak fura ma 0HP to nie byla brana pod uwage w szukaniu targetu
+29. interakcja nitra z samochodem
 
 Sciana pionowa = 1 na mapie
 Sciana pozioma = 2 na mapie

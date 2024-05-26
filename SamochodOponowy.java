@@ -1,3 +1,5 @@
+package org.project;
+
 import java.awt.geom.Ellipse2D;
 
 public class SamochodOponowy extends Samochod{

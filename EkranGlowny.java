@@ -1,3 +1,5 @@
+package org.project;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -5,9 +7,9 @@ import java.io.File;
 import java.io.IOException;
 
 public class EkranGlowny extends JPanel{
-    JFrame window;
-    Image background_image;
-    Image button_image;
+    private JFrame window;
+    private Image background_image;
+    private Image button_image;
     EkranGlowny(JFrame given_window){
         window = given_window;
         try{

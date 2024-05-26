@@ -1,19 +1,24 @@
+package org.project;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class Derby extends JPanel {
-    public int carsNormalAmount=5; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGŁOWNY
-    public int carsExplosiveAmount,carsTirePopersAmount,nitroAmount,wallAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
-    final int samochodSize=50; //wielkosc samochodu w pixelach
-    final int screenX=650; //rozmiar ekranu
-    final int screenY=650;
-    final int squaresX=screenX/samochodSize; //podzial ekranu na kwadraty -> potrzebne w klasa Mapa
-    final int squaresY=screenY/samochodSize;
+    private int carsNormalAmount=5; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGLOWNY
+    private int wallsAmount=5; //Tymczasowo ile scian
+    private int nitroAmount = 5; //Tymczasowo ile nitr - uzytkownik podaje
+    private int carsExplosiveAmount,carsTirePopersAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
+    public static final int samochodSize=50; //wielkosc samochodu w pixelach
+    public static final int screenX=650; //rozmiar ekranu
+    public static final int screenY=650;
+    public static final int squaresX=screenX/samochodSize; //podzial ekranu na kwadraty -> potrzebne w klasa Mapa
+    public static final int squaresY=screenY/samochodSize;
     //Tworzenie obiektow
-    Mapa map=new Mapa(this);
-    ArrayList<Samochod> normalCars=new ArrayList<>();
-    ArrayList<Sciana> walls=new ArrayList<>();
+    private Mapa map=new Mapa(this);
+    private ArrayList<Samochod> normalCars=new ArrayList<>();
+    private ArrayList<Sciana> walls=new ArrayList<>();
+    private ArrayList<Nitro> nitros=new ArrayList<>();
     //ponizej do testow
     //Samochod samochod1=new Samochod(this,50,50);
     //Samochod samochod2=new Samochod(this,500,500);
@@ -23,7 +28,7 @@ public class Derby extends JPanel {
     }
     //ustawienie pozycji startowych (na razie dla samochodow zwyklych)
     public void setStartingPositions(){
-        int[][] startingMap=map.map;
+        int[][] startingMap=map.getMap();
         //Przejscie przez kazde pole na mapie i stworzenie odpowiednich obiektow
         for(int i=0; i<squaresY; i++){
             for(int j=0; j<squaresX; j++){
@@ -35,6 +40,9 @@ public class Derby extends JPanel {
                 }
                 else if(startingMap[i][j]==2){
                     walls.add(new Sciana(this,j*samochodSize,i*samochodSize,"horizontal"));
+                }
+                else if(startingMap[i][j]==6){
+                    nitros.add(new Nitro(this,j*samochodSize,i*samochodSize));
                 }
             }
         }
@@ -61,21 +69,17 @@ public class Derby extends JPanel {
     public void gameStateUpdate(){
         Samochod targetCar;
         for(Samochod normalCar: normalCars){
-            if(normalCar.carId==normalCar.targetId){
+            if(normalCar.getCarId()==normalCar.getTargetId()){
                 normalCar.findTarget();
             }
-            targetCar=normalCars.get(normalCar.targetId);
-            normalCar.movement(targetCar.x, targetCar.y);
+            targetCar=normalCars.get(normalCar.getTargetId());
+            normalCar.movement(targetCar.getCurrentX(), targetCar.getCurrentY());
             for(Sciana wall: walls){
-                if(normalCar.hitbox.intersects(wall.hitbox)){
-                    normalCar.speed=0;
+                if(normalCar.getHitbox().intersects(wall.getHitbox())){
+                    normalCar.setSpeed(0); //ustawienie predkosci samochodu na zero - na czas testow
                 }
             }
         }
-        //zrobic petle aktualizujaca tablice samochodow
-        //2 komentarze ponizej to jest jazdy samochodow w swoja strone
-        //samochod1.movement(samochod2.getCurrentX(),samochod2.getCurrentY());
-        //samochod2.movement(samochod1.getCurrentX(),samochod1.getCurrentY());
     }
     public void paintComponent(Graphics g){
         super.paintComponent(g); //jak to dodaje to ekran sie czysci
@@ -87,5 +91,17 @@ public class Derby extends JPanel {
         for(Sciana wall: walls){
             wall.generateOnMap(g2d);
         }
+        for(Nitro nitro: nitros){
+            nitro.generateonMap(g2d);
+        }
+    }
+    public int getWallsAmount(){
+        return wallsAmount;
+    }
+    public int getCarsNormalAmount(){
+        return carsNormalAmount;
+    }
+    public int getNitroAmount(){
+        return nitroAmount;
     }
 }

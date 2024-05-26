@@ -1,3 +1,5 @@
+package org.project;
+
 import javax.swing.*;
 
 public class Main{
@@ -12,10 +14,9 @@ public class Main{
         window.add(derby);
         window.pack();
         window.setVisible(true);
-        /* EKRAN STARTOWY Z WYBORAMI, POKI CO USELESS
+        /* EKRAN STARTOWY Z WYBORAMI, POKI CO NIC NIE ROBI
         EkranGlowny main_menu=new EkranGlowny(window);
         main_menu.start();
-        //Czyszczenie ekranu
         window.getContentPane().removeAll();
         window.repaint(); */
         derby.setStartingPositions();

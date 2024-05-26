@@ -1,22 +1,24 @@
+package org.project;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.util.Random;
 
 public class Samochod {
-    public static int carCount=0;   //ile samochodow - za tego pomocą ustawienie ich id
-    public int carId,targetId; //id samochodu (od 0), id celu, do którego będzie się poruszać
-    boolean targetIdReached=false; //przy kolizji zmieniam na true
-    public int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
-    public int waga,speed;
-    public int hp; // Punkty zycia
-    public double turningAngle; // promien skretu
-    public boolean tires; // stan opon samochodu(narazie tak ze jak raz sie uszkodzi to zmiana na bool'u i potem przy uszkodzeniu nic sie wiecej nie zmienia)
-    public Image up,right,down,left; //Zdjecia samochodu obroconego w rozne strony
-    Derby derby;
-    Random generateNumber=new Random();
-    public Rectangle hitbox; // DO ZROBIENIA HITBOXY INTERSECTS
-    public boolean collisionDetected=false;
-    public int bodyCount; // ile samochodow pokonal dany samochod
+    private static int carCount=0;   //ile samochodow - za tego pomocą ustawienie ich id
+    private int carId;
+    private int targetId; //id samochodu (od 0), id celu, do którego będzie się poruszać
+    public boolean collision=false; //przy kolizji zmieniam na true
+    private int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
+    private int waga,speed;
+    private int hp; // Punkty zycia
+    private double turningAngle; // promien skretu
+    private boolean tires; // stan opon samochodu(narazie tak ze jak raz sie uszkodzi to zmiana na bool'u i potem przy uszkodzeniu nic sie wiecej nie zmienia)
+    private Image up,right,down,left; //Zdjecia samochodu obroconego w rozne strony
+    private Derby derby;
+    private Random generateNumber=new Random();
+    private Rectangle hitbox; // DO ZROBIENIA HITBOXY INTERSECTS
+    private int killCount; // ile samochodow pokonal dany samochod
     public Samochod(Derby derby, int givenX, int givenY){
         this.derby = derby;
         //tymczasowo, zrobic losowo, zeby nic na siebie nie nachodzilo - najpierw generowana map
@@ -32,7 +34,7 @@ public class Samochod {
         carCount++;
         targetId=carId;
     }
-    public void downloadImages(){ //Byc moze zmienic zdjecia dla klas pochodnych - inne kolory aut
+    private void downloadImages(){ //Byc moze zmienic zdjecia dla klas pochodnych - inne kolory aut
         try{
             up=ImageIO.read(getClass().getResource("/carYellowUp.png"));
             right=ImageIO.read(getClass().getResource("/carYellowRight.png"));
@@ -52,9 +54,9 @@ public class Samochod {
     public void movement(int targetX, int targetY){
         prevX=x;
         prevY=y;
-        if(targetIdReached){ //jezeli cel zostal zaatakowany, to szukamy nowego celu, jeszcze nie dziala
+        if(collision){ //jezeli cel zostal zaatakowany, to szukamy nowego celu, jeszcze nie dziala
             targetId=carId;
-            targetIdReached=false;
+            collision=false;
         }
         if(x>targetX && x>0){
             x-=speed;
@@ -80,5 +82,26 @@ public class Samochod {
         else if(prevX==x && prevY==y){
             g2d.drawImage(up,x,y, derby.samochodSize, derby.samochodSize,null);
         }
+    }
+    public void setSpeed(int speed){
+        this.speed=speed;
+    }
+    public int getCurrentX(){
+        return x;
+    }
+    public int getCurrentY(){
+        return y;
+    }
+    public int getCarId(){
+        return carId;
+    }
+    public Rectangle getHitbox(){
+        return hitbox;
+    }
+    public int getTargetId(){
+        return targetId;
+    }
+    public void setTargetId(int newTargetId){
+        targetId=newTargetId;
     }
 }

@@ -5,7 +5,8 @@ import java.util.ArrayList;
 public class Derby extends JPanel {
     private int carsNormalAmount=5; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGŁOWNY
     private int wallsAmount=5;
-    private int carsExplosiveAmount,carsTirePopersAmount,nitroAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
+    private int carsExplosiveAmount,carsTirePopersAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
+    private int nitroAmount = 5;
     public static final int samochodSize=50; //wielkosc samochodu w pixelach
     public static final int screenX=650; //rozmiar ekranu
     public static final int screenY=650;
@@ -15,6 +16,7 @@ public class Derby extends JPanel {
     public Mapa map=new Mapa(this);
     public ArrayList<Samochod> normalCars=new ArrayList<>();
     public ArrayList<Sciana> walls=new ArrayList<>();
+    public ArrayList<Nitro> nitros = new ArrayList<>();
     //ponizej do testow
     //Samochod samochod1=new Samochod(this,50,50);
     //Samochod samochod2=new Samochod(this,500,500);
@@ -36,6 +38,9 @@ public class Derby extends JPanel {
                 }
                 else if(startingMap[i][j]==2){
                     walls.add(new Sciana(this,j*samochodSize,i*samochodSize,"horizontal"));
+                }
+                else if(startingMap[i][j] == 6){
+                    nitros.add(new Nitro(this, j*samochodSize,i*samochodSize));
                 }
             }
         }
@@ -88,11 +93,17 @@ public class Derby extends JPanel {
         for(Sciana wall: walls){
             wall.generateOnMap(g2d);
         }
+        for(Nitro nitro: nitros){
+            nitro.generateonMap(g2d);
+        }
     }
     public int getWallsAmount(){
         return wallsAmount;
     }
     public int getCarsNormalAmount(){
         return carsNormalAmount;
+    }
+    public int getNitrosAmount(){
+        return nitroAmount;
     }
 }

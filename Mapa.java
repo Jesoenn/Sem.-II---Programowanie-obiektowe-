@@ -11,6 +11,7 @@ public class Mapa {
         map=new int[derby.squaresY][derby.squaresX]; // wiersze/kolumny
         downloadImages();
         generateLocation(derby.getCarsNormalAmount(),3);
+        generateLocation(derby.getNitrosAmount(),6);
         generateWallsLocation(derby.getWallsAmount());
     }
     private void downloadImages(){

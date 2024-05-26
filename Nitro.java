@@ -5,23 +5,24 @@ import javax.imageio.ImageIO;
 public class Nitro {
     private int speed;
     private static int countNitro = 1;
-    private int id,czas,x,y;
+    private int id,x,y;
+    private final int czas = 30; // czas dzialania nitra
     private Image nitro;
     private Derby derby;
-    public Nitro(int x, int y, int time)
+    public Nitro(Derby derby, int x, int y)
     {
+        this.derby = derby;
         id = countNitro;
         countNitro++;
         this.x = x;
         this.y = y;
-        this.czas = time;
         downloadImages();
     }
     private void downloadImages()
     {
         try
         {
-            nitro = ImageIO.read(getClass().getResource(("Nitro.png")));
+            nitro = ImageIO.read(getClass().getResource(("/Nitro.png")));
         }
         catch(Exception e)
         {

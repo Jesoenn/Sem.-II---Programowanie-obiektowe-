@@ -84,6 +84,13 @@
             //szukam przeciwnika jezeli nie mam
             if(targetId==carId)
                 findTarget();
+            else if(targetId==-1 && !spaceFound){
+                findEmptySpaceOnMap(derby.map.getMap());
+                moveToEmptySpace();
+            }
+            else if(targetId==-1 && spaceFound){
+                moveToEmptySpace();
+            }
             else{
                 movement(cars.get(targetId));
             }
@@ -104,6 +111,26 @@
             hitbox.setLocation(x,y);
             checkCollision();
         }
+        public void moveToEmptySpace(){
+            prevX=x;
+            prevY=y;
+            if(x>xMap && x>0)
+                x-=speed;
+            else if(x<xMap && x<derby.screenX)
+                x+=speed;
+            if(y>yMap && y>0)
+                y-=speed;
+            else if(y<yMap && y<derby.screenY)
+                y+=speed;
+            hitbox.setLocation(x,y);
+            checkCollision();
+            if(x<xMap+10 && x<xMap-10){
+                if(y<yMap+10 && y>yMap-10){
+                    findTarget();
+                    spaceFound=false;
+                }
+            }
+        }
         public void checkCollision(){
             for(Samochod car: cars){
                 if(hitbox.intersects(car.getHitbox()) && car.getCarId()!=carId){
@@ -112,6 +139,7 @@
                     targetId=carId;
                     hitbox.setLocation(x, y);
                     findTarget(); //Po zderzeniu jedzie na losowe pole
+                    break;
                 }
             }
             for(Sciana wall: walls){
@@ -119,6 +147,9 @@
                     x=prevX;
                     y=prevY;
                     hitbox.setLocation(x, y);
+                    targetId=-1;
+                    spaceFound=false;
+                    break;
                 }
             }
         }

@@ -8,9 +8,11 @@ public class Samochod {
     private static int carCount=0;   //ile samochodow - za tego pomocą ustawienie ich id
     private int carId;
     private int targetId; //id samochodu (od 0), id celu, do którego będzie się poruszać
+    private int targetBuf; // id poprzedniego celu
     public boolean collision=false; //przy kolizji zmieniam na true
     private int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
     private int waga,speed;
+    private int iterationMoment, iterationBuf; // po numerze iteracji z maina patrzy na warunek ilosci iteracji zeby nie jechal ciagle w strone odbicia sie od sciany
     private int hp; // Punkty zycia
     private double turningAngle; // promien skretu
     private boolean tires; // stan opon samochodu(narazie tak ze jak raz sie uszkodzi to zmiana na bool'u i potem przy uszkodzeniu nic sie wiecej nie zmienia)
@@ -33,6 +35,8 @@ public class Samochod {
         carId=carCount;
         carCount++;
         targetId=carId;
+        targetBuf = carId;
+        iterationMoment = iterationBuf = 0;
     }
     private void downloadImages(){ //Byc moze zmienic zdjecia dla klas pochodnych - inne kolory aut
         try{
@@ -46,8 +50,15 @@ public class Samochod {
     }
     //szukanie przeciwnika
     public void findTarget(){
-        while(targetId==carId){
+        while(targetId==carId && targetId == targetBuf){
             targetId=generateNumber.nextInt(carCount);
+        }
+    }
+    public void turnWhenIntersectWall() // "odbicie sie" od sciany
+    {
+        if(iterationMoment - iterationBuf == 8) // po przykladowej ilosci iteracji
+        {
+            findTarget();
         }
     }
     //Obliczanie obecnej lokalizacji na mapie -> duzo poprawek do zrobienia
@@ -55,7 +66,9 @@ public class Samochod {
         prevX=x;
         prevY=y;
         if(collision){ //jezeli cel zostal zaatakowany, to szukamy nowego celu, jeszcze nie dziala
-            targetId=carId;
+            //targetId=carId;
+            findTarget();
+            targetBuf = targetId;
             collision=false;
         }
         if(x>targetX && x>0){
@@ -86,6 +99,7 @@ public class Samochod {
     public void setSpeed(int speed){
         this.speed=speed;
     }
+    public int getSpeed() { return speed;};
     public int getCurrentX(){
         return x;
     }
@@ -104,4 +118,8 @@ public class Samochod {
     public void setTargetId(int newTargetId){
         targetId=newTargetId;
     }
+    public int getIterationMoment() {return iterationMoment;}
+    public void setIterationMoment(int iteration) {iterationMoment = iteration;}
+    public int getIterationBuf() {return iterationBuf;}
+    public void setIterationBuf(int iteration) {iterationBuf = iteration;}
 }

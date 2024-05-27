@@ -11,6 +11,7 @@ public class Derby extends JPanel {
     public static final int samochodSize=50; //wielkosc samochodu w pixelach
     public static final int screenX=650; //rozmiar ekranu
     public static final int screenY=650;
+    private int counter = 0; // zliczanie lczby iteracji(potrzebne do odbicia sie od sciany)
     public static final int squaresX=screenX/samochodSize; //podzial ekranu na kwadraty -> potrzebne w klasa Mapa
     public static final int squaresY=screenY/samochodSize;
     //Tworzenie obiektow
@@ -58,6 +59,11 @@ public class Derby extends JPanel {
             }
             gameStateUpdate();
             repaint();
+            counter++;
+            for(Samochod normalCar : normalCars)
+            {
+                normalCar.setIterationMoment(counter);
+            }
         }
     }
     //zaktualiziowanie obecnego stanu rozgrywki
@@ -71,7 +77,10 @@ public class Derby extends JPanel {
             normalCar.movement(targetCar.getCurrentX(), targetCar.getCurrentY());
             for(Sciana wall: walls){
                 if(normalCar.getHitbox().intersects(wall.getHitbox())){
-                    normalCar.setSpeed(0); //ustawienie predkosci samochodu na zero - na czas testow
+                    // zmiana kierunku o 180 stopni
+                    normalCar.setSpeed(-normalCar.getSpeed()); //ustawienie predkosci samochodu na zero - na czas testow
+                    normalCar.setIterationMoment(counter);
+                    normalCar.setIterationBuf(counter);
                 }
             }
         }

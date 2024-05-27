@@ -123,9 +123,9 @@
             else if(y<yMap && y<derby.screenY)
                 y+=speed;
             hitbox.setLocation(x,y);
-            if(x<xMap+10 && x<xMap-10){
-                if(y<yMap+10 && y>yMap-10){
-                    findTarget();
+            if(x<xMap+20 && x>xMap-20){
+                if(y<yMap+20 && y>yMap-20){
+                    targetId=carId;
                     spaceFound=false;
                 }
             }

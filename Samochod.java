@@ -123,13 +123,13 @@
             else if(y<yMap && y<derby.screenY)
                 y+=speed;
             hitbox.setLocation(x,y);
-            checkCollision();
             if(x<xMap+10 && x<xMap-10){
                 if(y<yMap+10 && y>yMap-10){
                     findTarget();
                     spaceFound=false;
                 }
             }
+            checkCollision();
         }
         public void checkCollision(){
             for(Samochod car: cars){

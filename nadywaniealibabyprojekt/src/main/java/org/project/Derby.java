@@ -63,13 +63,16 @@ public class Derby extends JPanel {
             for(Samochod normalCar : normalCars)
             {
                 normalCar.setIterationMoment(counter);
+                normalCar.turnWhenIntersectWall();
             }
         }
     }
     //zaktualiziowanie obecnego stanu rozgrywki
     public void gameStateUpdate(){
         Samochod targetCar;
+        int i = 0;
         for(Samochod normalCar: normalCars){
+
             if(normalCar.getCarId()==normalCar.getTargetId()){
                 normalCar.findTarget();
             }
@@ -83,6 +86,24 @@ public class Derby extends JPanel {
                     normalCar.setIterationBuf(counter);
                 }
             }
+            // zderzenia samochodow i odejmowania hp(wstepne jeszcze do dociagniecia)
+            for(int j = i; j < normalCars.size(); j++)  // nie bierze pod uwage zderzenia z samym soba
+            {
+                if(normalCars.get(j).getHitbox().intersects(normalCar.getHitbox()))
+                {
+                    if(normalCars.get(j).getTargetId() == normalCar.getCarId()) // samochod zderzyl swoj cel
+                    {
+                        normalCar.gotDamage(10);
+                    }
+                     // zderzyl randoma (wiec po rowno jakis damage narazie dam)
+                    else
+                    {
+                    normalCar.gotDamage(5);
+                    normalCars.get(j).gotDamage(5);
+                    }
+                }
+            }
+            i++;
         }
     }
     public void paintComponent(Graphics g){

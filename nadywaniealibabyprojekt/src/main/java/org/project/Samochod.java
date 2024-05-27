@@ -12,7 +12,7 @@ public class Samochod {
     public boolean collision=false; //przy kolizji zmieniam na true
     private int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
     private int waga,speed;
-    private int iterationMoment, iterationBuf; // po numerze iteracji z maina patrzy na warunek ilosci iteracji zeby nie jechal ciagle w strone odbicia sie od sciany
+    private int iterationMoment, iterationBuf; // po numerze iteracji z derby patrzy na warunek ilosci iteracji zeby nie jechal ciagle w strone odbicia sie od sciany
     private int hp; // Punkty zycia
     private double turningAngle; // promien skretu
     private boolean tires; // stan opon samochodu(narazie tak ze jak raz sie uszkodzi to zmiana na bool'u i potem przy uszkodzeniu nic sie wiecej nie zmienia)
@@ -54,10 +54,11 @@ public class Samochod {
             targetId=generateNumber.nextInt(carCount);
         }
     }
-    public void turnWhenIntersectWall() // "odbicie sie" od sciany
+    public void turnWhenIntersectWall() // po "odbiciu sie" od sciany
     {
-        if(iterationMoment - iterationBuf == 8) // po przykladowej ilosci iteracji
+        if(iterationMoment - iterationBuf == 30) // po przykladowej ilosci iteracji
         {
+            setSpeed(-getSpeed());
             findTarget();
         }
     }
@@ -67,8 +68,8 @@ public class Samochod {
         prevY=y;
         if(collision){ //jezeli cel zostal zaatakowany, to szukamy nowego celu, jeszcze nie dziala
             //targetId=carId;
-            findTarget();
             targetBuf = targetId;
+            findTarget();
             collision=false;
         }
         if(x>targetX && x>0){
@@ -122,4 +123,5 @@ public class Samochod {
     public void setIterationMoment(int iteration) {iterationMoment = iteration;}
     public int getIterationBuf() {return iterationBuf;}
     public void setIterationBuf(int iteration) {iterationBuf = iteration;}
+    public void gotDamage(int damage) {hp -= damage;}
 }

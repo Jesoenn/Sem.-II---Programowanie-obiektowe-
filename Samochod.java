@@ -2,6 +2,7 @@ package org.project;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Samochod {
@@ -19,6 +20,7 @@ public class Samochod {
     private Random generateNumber=new Random();
     private Rectangle hitbox; // DO ZROBIENIA HITBOXY INTERSECTS
     private int killCount; // ile samochodow pokonal dany samochod
+    private ArrayList<Samochod> cars;
     public Samochod(Derby derby, int givenX, int givenY){
         this.derby = derby;
         //tymczasowo, zrobic losowo, zeby nic na siebie nie nachodzilo - najpierw generowana map
@@ -44,6 +46,9 @@ public class Samochod {
             e.printStackTrace();
         }
     }
+    public void updateCars(){
+        cars=derby.normalCars;
+    }
     //szukanie przeciwnika
     public void findTarget(){
         while(targetId==carId){
@@ -51,7 +56,7 @@ public class Samochod {
         }
     }
     //Obliczanie obecnej lokalizacji na mapie -> duzo poprawek do zrobienia
-    public void movement(int targetX, int targetY){
+    /*public void movement(int targetX, int targetY){
         prevX=x;
         prevY=y;
         if(collision){ //jezeli cel zostal zaatakowany, to szukamy nowego celu, jeszcze nie dziala
@@ -68,7 +73,46 @@ public class Samochod {
         else if(y<targetY && y< derby.screenY)
             y+=speed;
         hitbox.setLocation(x,y);
+    }*/
+    public void update(){
+        //szukam przeciwnika jezeli nie mam
+        if(targetId==carId)
+            findTarget();
+        else{
+            movement(derby.normalCars.get(targetId));
+        }
     }
+    public void movement(Samochod target){
+        int targetX=target.getCurrentX();
+        int targetY=target.getCurrentY();
+        prevX=x;
+        prevY=y;
+        if(x>targetX && x>0)
+            x-=speed;
+        else if(x<targetX && x< derby.screenX)
+            x+=speed;
+        if(y>targetY && y>0)
+            y-=speed;
+        else if(y<targetY && y< derby.screenY)
+            y+=speed;
+
+        for(Samochod car: cars){
+            if(hitbox.intersects(car.hitbox) && car.getCarId()!=carId){
+                speed=0;
+            }
+        }
+        hitbox.setLocation(x,y);
+    }
+    //
+    /*public void findFreeSquare(int[][] map){
+        int newY=generateNumber.nextInt(derby.squaresY);
+        int newX=generateNumber.nextInt(derby.squaresX);
+        if(map[newY][newX]!=1 && map[newY][newX]!=2){
+            targetXWallCollision=newX;
+            targetYWallCollision=newY;
+            //targetId=-1;
+        }
+    }*/
     //Aktualizacja zdjecia na ekranie
     public void updateOnMap(Graphics2D g2d){
         if(prevY>y)

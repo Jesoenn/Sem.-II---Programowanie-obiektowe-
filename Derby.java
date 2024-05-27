@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Derby extends JPanel {
     private int carsNormalAmount=5; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGLOWNY
     private int wallsAmount=5; //Tymczasowo ile scian
-    private int nitroAmount = 5; //Tymczasowo ile nitr - uzytkownik podaje
+    private int nitroAmount = 0; //Tymczasowo ile nitr - uzytkownik podaje
     private int carsExplosiveAmount,carsTirePopersAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
     public static final int samochodSize=50; //wielkosc samochodu w pixelach
     public static final int screenX=650; //rozmiar ekranu
@@ -16,7 +16,7 @@ public class Derby extends JPanel {
     public static final int squaresY=screenY/samochodSize;
     //Tworzenie obiektow
     private Mapa map=new Mapa(this);
-    private ArrayList<Samochod> normalCars=new ArrayList<>();
+    public ArrayList<Samochod> normalCars=new ArrayList<>();
     private ArrayList<Sciana> walls=new ArrayList<>();
     private ArrayList<Nitro> nitros=new ArrayList<>();
     //ponizej do testow
@@ -46,6 +46,8 @@ public class Derby extends JPanel {
                 }
             }
         }
+        for(Samochod car: normalCars)
+            car.updateCars();
     }
     //rozpoczecie symulacji
     public void start(){
@@ -66,7 +68,7 @@ public class Derby extends JPanel {
         }
     }
     //zaktualiziowanie obecnego stanu rozgrywki
-    public void gameStateUpdate(){
+    /*public void gameStateUpdate(){
         Samochod targetCar;
         for(Samochod normalCar: normalCars){
             if(normalCar.getCarId()==normalCar.getTargetId()){
@@ -76,7 +78,17 @@ public class Derby extends JPanel {
             normalCar.movement(targetCar.getCurrentX(), targetCar.getCurrentY());
             for(Sciana wall: walls){
                 if(normalCar.getHitbox().intersects(wall.getHitbox())){
-                    normalCar.setSpeed(0); //ustawienie predkosci samochodu na zero - na czas testow
+                    normalCar.setSpeed(0);
+                }
+            }
+        }
+    }*/
+    public void gameStateUpdate(){
+        for(Samochod normalCar: normalCars){
+            normalCar.update();
+            for(Sciana wall: walls){
+                if(normalCar.getHitbox().intersects(wall.getHitbox())){
+                    normalCar.setSpeed(0);
                 }
             }
         }
@@ -85,14 +97,14 @@ public class Derby extends JPanel {
         super.paintComponent(g); //jak to dodaje to ekran sie czysci
         Graphics2D g2d=(Graphics2D) g;
         map.drawMap(g2d);
+        for(Nitro nitro: nitros){
+            nitro.generateonMap(g2d);
+        }
         for(Samochod normalCar: normalCars){
             normalCar.updateOnMap(g2d);
         }
         for(Sciana wall: walls){
             wall.generateOnMap(g2d);
-        }
-        for(Nitro nitro: nitros){
-            nitro.generateonMap(g2d);
         }
     }
     public int getWallsAmount(){

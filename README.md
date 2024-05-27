@@ -31,6 +31,8 @@ Do zrobienia:
 31. dodanie zeby jak fura ma 0HP to nie byla brana pod uwage w szukaniu targetu
 32. interakcja nitra z samochodem
 
+33. NIC NIE DOPISUJ W SAMOCHOD TU PLS BO ROZJEBANY PLIK MUSZE LEKKO POPRAWIC 
+
 Sciana pionowa = 1 na mapie
 Sciana pozioma = 2 na mapie
 Nitro=6 na mapie

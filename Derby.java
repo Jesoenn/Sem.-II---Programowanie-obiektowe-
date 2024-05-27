@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Derby extends JPanel {
     private int carsNormalAmount=5; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGLOWNY
-    private int wallsAmount=5; //Tymczasowo ile scian
+    private int wallsAmount=8; //Tymczasowo ile scian
     private int nitroAmount = 0; //Tymczasowo ile nitr - uzytkownik podaje
     private int carsExplosiveAmount,carsTirePopersAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
     public static final int samochodSize=50; //wielkosc samochodu w pixelach
@@ -15,9 +15,9 @@ public class Derby extends JPanel {
     public static final int squaresX=screenX/samochodSize; //podzial ekranu na kwadraty -> potrzebne w klasa Mapa
     public static final int squaresY=screenY/samochodSize;
     //Tworzenie obiektow
-    private Mapa map=new Mapa(this);
-    public ArrayList<Samochod> normalCars=new ArrayList<>();
-    private ArrayList<Sciana> walls=new ArrayList<>();
+    public Mapa map=new Mapa(this); //tymczasowo public
+    public ArrayList<Samochod> normalCars=new ArrayList<>(); //tymczasowo public
+    public ArrayList<Sciana> walls=new ArrayList<>(); //tymczasowo public
     private ArrayList<Nitro> nitros=new ArrayList<>();
     //ponizej do testow
     //Samochod samochod1=new Samochod(this,50,50);
@@ -47,7 +47,7 @@ public class Derby extends JPanel {
             }
         }
         for(Samochod car: normalCars)
-            car.updateCars();
+            car.updateWalls();
     }
     //rozpoczecie symulacji
     public void start(){
@@ -86,11 +86,6 @@ public class Derby extends JPanel {
     public void gameStateUpdate(){
         for(Samochod normalCar: normalCars){
             normalCar.update();
-            for(Sciana wall: walls){
-                if(normalCar.getHitbox().intersects(wall.getHitbox())){
-                    normalCar.setSpeed(0);
-                }
-            }
         }
     }
     public void paintComponent(Graphics g){

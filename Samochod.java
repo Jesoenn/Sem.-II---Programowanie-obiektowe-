@@ -137,6 +137,7 @@
                     x=prevX;
                     y=prevY;
                     targetId=carId;
+                    spaceFound=false;
                     hitbox.setLocation(x, y);
                     findTarget(); //Po zderzeniu jedzie na losowe pole
                     break;

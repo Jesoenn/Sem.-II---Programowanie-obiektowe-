@@ -94,8 +94,6 @@
                 y+=speed;
             hitbox.setLocation(x,y);
             checkCollision();
-            if(hp<=0)
-                speed=0;
         }
         public void moveToEmptySpace(){
             prevX=x;
@@ -145,6 +143,8 @@
                     break;
                 }
             }
+            if(hp<=0)
+                speed=0;
         }
         public void findEmptySpaceOnMap(int[][] map){
             int newY=generateNumber.nextInt(derby.squaresY);

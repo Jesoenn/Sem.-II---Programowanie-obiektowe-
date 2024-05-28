@@ -8,7 +8,7 @@
     public class Samochod {
         private static int carCount=0;   //ile samochodow - za tego pomocą ustawienie ich id
         private int carId;
-        private int targetId; //id samochodu (od 0), id celu, do którego będzie się poruszać
+        private int prevTargetId,targetId; //id samochodu (od 0), id celu, do którego będzie się poruszać
         public boolean collision=false; //przy kolizji zmieniam na true
         private int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
         private int waga,speed;
@@ -26,17 +26,18 @@
         public Samochod(Derby derby, int givenX, int givenY){
             this.derby = derby;
             //tymczasowo, zrobic losowo, zeby nic na siebie nie nachodzilo - najpierw generowana map
-            prevY=y=givenY;
-            prevX=x=givenX;
             waga=1500;
             speed=1;
             hp = 100;
             //ponizej koncowe, nie zmieniac
             downloadImages();
+            prevY=y=givenY;
+            prevX=x=givenX;
             hitbox=new Rectangle(x,y,derby.samochodSize,derby.samochodSize);
             carId=carCount;
             carCount++;
             targetId=carId;
+            prevTargetId=carId;
         }
         private void downloadImages(){ //Byc moze zmienic zdjecia dla klas pochodnych - inne kolory aut
             try{
@@ -56,33 +57,15 @@
         }
         //szukanie przeciwnika
         public void findTarget(){
-            while(targetId==carId){
+            while(targetId==carId || targetId==prevTargetId){
                 targetId=generateNumber.nextInt(carCount);
             }
         }
-        //Obliczanie obecnej lokalizacji na mapie -> duzo poprawek do zrobienia
-        /*public void movement(int targetX, int targetY){
-            prevX=x;
-            prevY=y;
-            if(collision){ //jezeli cel zostal zaatakowany, to szukamy nowego celu, jeszcze nie dziala
-                targetId=carId;
-                collision=false;
-            }
-            if(x>targetX && x>0){
-                x-=speed;
-            }
-            else if(x<targetX && x< derby.screenX)
-                x+=speed;
-            if(y>targetY && y>0)
-                y-=speed;
-            else if(y<targetY && y< derby.screenY)
-                y+=speed;
-            hitbox.setLocation(x,y);
-        }*/
+        //aktualizacja przeciwnika samochodu
         public void update(){
             updateCars();
             //szukam przeciwnika jezeli nie mam
-            if(targetId==carId)
+            if(targetId==carId || targetId==prevTargetId)
                 findTarget();
             else if(targetId==-1 && !spaceFound){
                 findEmptySpaceOnMap(derby.map.getMap());
@@ -95,6 +78,7 @@
                 movement(cars.get(targetId));
             }
         }
+        //ruch po mapie
         public void movement(Samochod target){
             int targetX=target.getCurrentX();
             int targetY=target.getCurrentY();
@@ -110,6 +94,8 @@
                 y+=speed;
             hitbox.setLocation(x,y);
             checkCollision();
+            if(hp<=0)
+                speed=0;
         }
         public void moveToEmptySpace(){
             prevX=x;
@@ -131,15 +117,21 @@
             }
             checkCollision();
         }
+        //sprawdzenie kolizji
         public void checkCollision(){
             for(Samochod car: cars){
                 if(hitbox.intersects(car.getHitbox()) && car.getCarId()!=carId){
+                    //Zadawanie obrazen
+                    damageCar(car);
+
+                    //
                     x=prevX;
                     y=prevY;
+                    prevTargetId=targetId;
                     targetId=carId;
-                    spaceFound=false;
+                    spaceFound=false; //po zderzeniu ze sciana przerwanie jechania na puste pole
                     hitbox.setLocation(x, y);
-                    findTarget(); //Po zderzeniu jedzie na losowe pole
+                    findTarget(); //Po zderzeniu zmienia target
                     break;
                 }
             }
@@ -148,7 +140,7 @@
                     x=prevX;
                     y=prevY;
                     hitbox.setLocation(x, y);
-                    targetId=-1;
+                    targetId=-1; //po zderzeniu jedzie na losowe pole
                     spaceFound=false;
                     break;
                 }
@@ -183,6 +175,17 @@
                 //targetId=-1;
             }
         }*/
+        //W kazdej chwili mozna zmienic
+        public void damageCar(Samochod enemy){
+            int damage=0;
+            if(speed>enemy.getSpeed())
+                damage=(speed-enemy.getSpeed())*10;
+            else if(speed<enemy.getSpeed())
+                damage=(enemy.getSpeed()-speed)*10;
+            else if(speed==enemy.getSpeed())
+                damage=25; //TYMCZASOWO ZEBY SZYBKO UMARL
+            enemy.sethp(enemy.gethp()-damage);
+        }
         //Aktualizacja zdjecia na ekranie
         public void updateOnMap(Graphics2D g2d){
             if(prevY>y)
@@ -196,9 +199,14 @@
             else if(prevX==x && prevY==y){
                 g2d.drawImage(up,x,y, derby.samochodSize, derby.samochodSize,null);
             }
+            g2d.setColor(Color.red);
+            g2d.drawString(String.valueOf(hp),x,y);
         }
         public void setSpeed(int speed){
             this.speed=speed;
+        }
+        public int getSpeed(){
+            return speed;
         }
         public int getCurrentX(){
             return x;
@@ -217,5 +225,11 @@
         }
         public void setTargetId(int newTargetId){
             targetId=newTargetId;
+        }
+        public int gethp(){
+            return hp;
+        }
+        public void sethp(int hp){
+            this.hp=hp;
         }
     }

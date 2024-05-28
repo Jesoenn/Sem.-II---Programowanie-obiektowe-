@@ -5,8 +5,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Derby extends JPanel {
-    private int carsNormalAmount=5; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGLOWNY
-    private int wallsAmount=8; //Tymczasowo ile scian
+    private int carsNormalAmount=8; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGLOWNY
+    private int wallsAmount=5; //Tymczasowo ile scian
     private int nitroAmount = 0; //Tymczasowo ile nitr - uzytkownik podaje
     private int carsExplosiveAmount,carsTirePopersAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
     public static final int samochodSize=50; //wielkosc samochodu w pixelach

@@ -143,6 +143,7 @@
                     break;
                 }
             }
+            //NA RAZIE TYLKO ZATRZYMUJE, NIE ZNIKA
             if(hp<=0)
                 speed=0;
         }
@@ -157,24 +158,6 @@
             yMap=newY*derby.samochodSize;
             spaceFound=true;
         }
-
-        /*public void checkWallCollision(){
-            for(Sciana wall: walls){
-                if(hitbox.intersects(wall.getHitbox())){
-                    speed=0;
-                }
-            }
-        }/*
-        //
-        /*public void findFreeSquare(int[][] map){
-            int newY=generateNumber.nextInt(derby.squaresY);
-            int newX=generateNumber.nextInt(derby.squaresX);
-            if(map[newY][newX]!=1 && map[newY][newX]!=2){
-                targetXWallCollision=newX;
-                targetYWallCollision=newY;
-                //targetId=-1;
-            }
-        }*/
         //W kazdej chwili mozna zmienic
         public void damageCar(Samochod enemy){
             int damage=0;

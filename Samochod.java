@@ -12,7 +12,6 @@
         public boolean collision=false; //przy kolizji zmieniam na true
         private int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
         private int waga,speed;
-        private final int speedBase = 1;  // predkosc bazowa
         private int xMap,yMap; private boolean spaceFound=false;
         private int hp; // Punkty zycia
         private double turningAngle; // promien skretu
@@ -22,20 +21,15 @@
         private Random generateNumber=new Random();
         private Rectangle hitbox; // DO ZROBIENIA HITBOXY INTERSECTS
         private int killCount; // ile samochodow pokonal dany samochod
-        public static int bodyCount = 0; // ile odpadlo z walki
-        private boolean deathMod; // do znoszenia ograniczenia blokady wyjscia z mapy(wtedy wywalamy auto za mape)
-        static int addToDeathCar; // licznik dodawany do przegranych zeby mieli nadal unikalne id
         private ArrayList<Samochod> cars;
         private ArrayList<Sciana> walls;
-        private ArrayList<Nitro> nitros;
+        int iterationsWithoutMoving=0;
         public Samochod(Derby derby, int givenX, int givenY){
             this.derby = derby;
             //tymczasowo, zrobic losowo, zeby nic na siebie nie nachodzilo - najpierw generowana map
             waga=1500;
-            speed=speedBase;
+            speed=1;
             hp = 100;
-            deathMod = false;
-            addToDeathCar++;
             //ponizej koncowe, nie zmieniac
             downloadImages();
             prevY=y=givenY;
@@ -62,31 +56,44 @@
         public void updateWalls(){
             walls=derby.walls;
         }
-        public void updateNitros()
-        {
-            nitros = derby.nitros;
-        }
         //szukanie przeciwnika
         public void findTarget(){
             while(targetId==carId || targetId==prevTargetId){
                 targetId=generateNumber.nextInt(carCount);
             }
+            Samochod tempCar=cars.get(targetId);
+            if(tempCar.gethp()<=0){
+                targetId=carId;
+            }
         }
         //aktualizacja przeciwnika samochodu
         public void update(){
             updateCars();
-            //szukam przeciwnika jezeli nie mam
-            if(targetId==carId || targetId==prevTargetId)
-                findTarget();
-            else if(targetId==-1 && !spaceFound){
-                findEmptySpaceOnMap(derby.map.getMap());
-                moveToEmptySpace();
-            }
-            else if(targetId==-1 && spaceFound){
-                moveToEmptySpace();
+            if(hp>0){
+                //Zapobiega utknieciu samochodu w 1 miejscu
+                if(x==prevX && y==prevY){
+                    iterationsWithoutMoving++;
+                    System.out.println(carId+": "+iterationsWithoutMoving);
+                }
+                //szukam przeciwnika jezeli nie mam
+                if(targetId==carId || targetId==prevTargetId){
+                    findTarget();
+                }
+                else if((targetId==-1 && !spaceFound) || iterationsWithoutMoving>=60){
+                    iterationsWithoutMoving=0;
+                    targetId=-1;
+                    findEmptySpaceOnMap(derby.map.getMap());
+                    moveToEmptySpace();
+                }
+                else if(targetId==-1 && spaceFound){
+                    moveToEmptySpace();
+                }
+                else{
+                    movement(cars.get(targetId));
+                }
             }
             else{
-                movement(cars.get(targetId));
+                hitbox.setLocation(-100,-100);
             }
         }
         //ruch po mapie
@@ -107,37 +114,31 @@
             checkCollision();
         }
         public void moveToEmptySpace(){
-            if(deathMod == false) {
             prevX=x;
             prevY=y;
-                if(x>xMap && x>0)
-                    x-=speed;
-                else if(x<xMap && x<derby.screenX)
-                    x+=speed;
-                if(y>yMap && y>0)
-                    y-=speed;
-                else if(y<yMap && y<derby.screenY)
-                    y+=speed;
-                hitbox.setLocation(x,y);
-                if(x<xMap+20 && x>xMap-20){
-                    if(y<yMap+20 && y>yMap-20){
-                        targetId=carId;
-                        spaceFound=false;
-                    }
+            if(x>xMap && x>0)
+                x-=speed;
+            else if(x<xMap && x<derby.screenX)
+                x+=speed;
+            if(y>yMap && y>0)
+                y-=speed;
+            else if(y<yMap && y<derby.screenY)
+                y+=speed;
+            hitbox.setLocation(x,y);
+            if(x<xMap+20 && x>xMap-20){
+                if(y<yMap+20 && y>yMap-20){
+                    targetId=carId;
+                    spaceFound=false;
                 }
-                checkCollision();
             }
+            checkCollision();
         }
         //sprawdzenie kolizji
         public void checkCollision(){
             for(Samochod car: cars){
-//                if(carCount - bodyCount == 2) // zostaly 2 auta na mapie           
-//                {
-//                    moveToEmptySpace();
-//                }
+                //double distance = calculateDistance(this.x, this.y, car.getCurrentX(), car.getCurrentY());
                 if(hitbox.intersects(car.getHitbox()) && car.getCarId()!=carId){
                     //Zadawanie obrazen
-                    
                     damageCar(car);
 
                     //
@@ -150,6 +151,11 @@
                     findTarget(); //Po zderzeniu zmienia target
                     break;
                 }
+//                if(distance<40 && car.getCarId()==targetId){
+//                    System.out.println(carId+"UTKNALEM,, HELP");
+//                    targetId=carId;
+//                    findTarget();
+//                }
             }
             for(Sciana wall: walls){
                 if(hitbox.intersects(wall.getHitbox())){
@@ -161,25 +167,6 @@
                     break;
                 }
             }
-            updateNitros();
-            for(Nitro nitro: nitros)
-            {
-                if(hitbox.intersects(nitro.getHitbox()))
-                {
-                    setSpeed(speed + nitro.getSpeed());
-                    nitro.setGotNitroMod(true); // final countdown dla dzialania nitra
-                }
-            }
-            //NA RAZIE TYLKO ZATRZYMUJE, NIE ZNIKA
-            if(hp<=0)
-                speed=0;
-                deathMod = true; // ominiecie warunku pozostania w polu mapy
-                x = -100; // wywalenie za mape
-                y = -100;
-                bodyCount++;
-//              graveYard.add(getCarId()); to byl pomysl zeby sprawdzac po array'u id martwych aut i wybieral te ktore pozostaly na mapie
-                setId(99+addToDeathCar);
-                setTargetId(carId);
         }
         public void findEmptySpaceOnMap(int[][] map){
             int newY=generateNumber.nextInt(derby.squaresY);
@@ -205,19 +192,25 @@
         }
         //Aktualizacja zdjecia na ekranie
         public void updateOnMap(Graphics2D g2d){
-            if(prevY>y)
-                g2d.drawImage(up,x,y, derby.samochodSize, derby.samochodSize,null);
-            else if(prevY<y)
-                g2d.drawImage(down,x,y, derby.samochodSize, derby.samochodSize,null);
-            else if(prevX>x)
-                g2d.drawImage(left,x,y, derby.samochodSize, derby.samochodSize,null);
-            else if(prevX<x)
-                g2d.drawImage(right,x,y, derby.samochodSize, derby.samochodSize,null);
-            else if(prevX==x && prevY==y){
-                g2d.drawImage(up,x,y, derby.samochodSize, derby.samochodSize,null);
+            if(hp>0){
+                if(prevY>y)
+                    g2d.drawImage(up,x,y, derby.samochodSize, derby.samochodSize,null);
+                else if(prevY<y)
+                    g2d.drawImage(down,x,y, derby.samochodSize, derby.samochodSize,null);
+                else if(prevX>x)
+                    g2d.drawImage(left,x,y, derby.samochodSize, derby.samochodSize,null);
+                else if(prevX<x)
+                    g2d.drawImage(right,x,y, derby.samochodSize, derby.samochodSize,null);
+                else if(prevX==x && prevY==y){
+                    g2d.drawImage(up,x,y, derby.samochodSize, derby.samochodSize,null);
+                }
             }
+            //POTEM WRZUCIC 2 LINIJKI PONIZEJ DO IFA
             g2d.setColor(Color.red);
-            g2d.drawString(String.valueOf(hp),x,y);
+            g2d.drawString(String.valueOf(hp)+" id:"+carId,x,y);
+        }
+        private double calculateDistance(int x1, int y1, int x2, int y2) {
+            return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
         }
         public void setSpeed(int speed){
             this.speed=speed;
@@ -249,5 +242,4 @@
         public void sethp(int hp){
             this.hp=hp;
         }
-        public void setId(int deathId) {carId = deathId;}; // do martwych aut
     }

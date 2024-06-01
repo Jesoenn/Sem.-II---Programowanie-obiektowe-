@@ -7,6 +7,7 @@
 
     public class Samochod {
         private static int carCount=0;   //ile samochodow - za tego pomocą ustawienie ich id
+        private static int carsAlive=0; private boolean resetPreviousTarget=false;
         private int carId;
         private int prevTargetId,targetId; //id samochodu (od 0), id celu, do którego będzie się poruszać
         public boolean collision=false; //przy kolizji zmieniam na true
@@ -19,7 +20,7 @@
         private Image up,right,down,left; //Zdjecia samochodu obroconego w rozne strony
         private Derby derby;
         private Random generateNumber=new Random();
-        private Rectangle hitbox; // DO ZROBIENIA HITBOXY INTERSECTS
+        private Rectangle hitbox;
         private int killCount; // ile samochodow pokonal dany samochod
         private ArrayList<Samochod> cars;
         private ArrayList<Sciana> walls;
@@ -29,7 +30,7 @@
             //tymczasowo, zrobic losowo, zeby nic na siebie nie nachodzilo - najpierw generowana map
             waga=1500;
             speed=1;
-            hp = 100;
+            carsAlive++;
             //ponizej koncowe, nie zmieniac
             downloadImages();
             prevY=y=givenY;
@@ -39,6 +40,7 @@
             carCount++;
             targetId=carId;
             prevTargetId=carId;
+            hp=100;
         }
         private void downloadImages(){ //Byc moze zmienic zdjecia dla klas pochodnych - inne kolory aut
             try{
@@ -70,13 +72,23 @@
         public void update(){
             updateCars();
             if(hp>0){
-                //Zapobiega utknieciu samochodu w 1 miejscu
+                //Zapobiega utknieciu samochodu w 1 miejscu na dluzej niz sekunde
                 if(x==prevX && y==prevY){
                     iterationsWithoutMoving++;
                     System.out.println(carId+": "+iterationsWithoutMoving);
                 }
+                //ZROBIC ZE JEZELI 2 SAMOCHODY TO JADA DO SIEBIE, POTEM UDERZAJA, JADA NA LOSOWE POLE I ZNOWU DO SIEBIE
+                if(carsAlive==2 && !spaceFound && resetPreviousTarget){
+                    targetId=-1;
+                    prevTargetId=carId;
+                    findEmptySpaceOnMap(derby.map.getMap());
+                    moveToEmptySpace();
+                }
+                else if(carsAlive==2 && spaceFound && resetPreviousTarget){
+                    moveToEmptySpace();
+                }
                 //szukam przeciwnika jezeli nie mam
-                if(targetId==carId || targetId==prevTargetId){
+                else if(targetId==carId || targetId==prevTargetId){
                     findTarget();
                 }
                 else if((targetId==-1 && !spaceFound) || iterationsWithoutMoving>=60){
@@ -129,6 +141,8 @@
                 if(y<yMap+20 && y>yMap-20){
                     targetId=carId;
                     spaceFound=false;
+                    if(carsAlive==2)
+                        resetPreviousTarget=false;
                 }
             }
             checkCollision();
@@ -136,7 +150,6 @@
         //sprawdzenie kolizji
         public void checkCollision(){
             for(Samochod car: cars){
-                //double distance = calculateDistance(this.x, this.y, car.getCurrentX(), car.getCurrentY());
                 if(hitbox.intersects(car.getHitbox()) && car.getCarId()!=carId){
                     //Zadawanie obrazen
                     damageCar(car);
@@ -146,16 +159,13 @@
                     y=prevY;
                     prevTargetId=targetId;
                     targetId=carId;
+                    if(carsAlive==2)
+                        resetPreviousTarget=true;
                     spaceFound=false; //po zderzeniu ze sciana przerwanie jechania na puste pole
                     hitbox.setLocation(x, y);
                     findTarget(); //Po zderzeniu zmienia target
                     break;
                 }
-//                if(distance<40 && car.getCarId()==targetId){
-//                    System.out.println(carId+"UTKNALEM,, HELP");
-//                    targetId=carId;
-//                    findTarget();
-//                }
             }
             for(Sciana wall: walls){
                 if(hitbox.intersects(wall.getHitbox())){
@@ -164,6 +174,8 @@
                     hitbox.setLocation(x, y);
                     targetId=-1; //po zderzeniu jedzie na losowe pole
                     spaceFound=false;
+                    if(carsAlive==2)
+                        resetPreviousTarget=false;
                     break;
                 }
             }
@@ -189,6 +201,10 @@
             else if(speed==enemy.getSpeed())
                 damage=25; //TYMCZASOWO ZEBY SZYBKO UMARL
             enemy.sethp(enemy.gethp()-damage);
+            if(enemy.gethp()<=0){
+                carsAlive--;
+                System.out.println("Samochodow w symulacji: "+carsAlive);
+            }
         }
         //Aktualizacja zdjecia na ekranie
         public void updateOnMap(Graphics2D g2d){

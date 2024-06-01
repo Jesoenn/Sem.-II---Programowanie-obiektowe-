@@ -5,12 +5,12 @@ import java.awt.*;
 import javax.imageio.ImageIO;
 
 public class Nitro {
-    private int speed;
-    private static int countNitro = 1;
-    private int czas=30; // czas dzialania nitra (dalem nie final static,
+    public static final int speedBoost=1;
+    private static int countNitro = 0;
+    private boolean pickedUp=false;
+    private int time=60*2; // ilosc iteracji=fps*sekundy dzialania nitra (dalem nie final static,
                          // zeby mozna zmniejszac do 0 - nie robic drugiej zmiennej)
     private int id,x,y;
-    private boolean gotNitroMod = false; // info czy zostal zebrany przez samochod czy nie
     private Image nitro;
     private Derby derby;
     private Rectangle hitbox;
@@ -22,7 +22,7 @@ public class Nitro {
         this.x = x;
         this.y = y;
         downloadImages();
-        hitbox=new Rectangle(x,y,derby.samochodSize,derby.samochodSize);
+        hitbox=new Rectangle(x+10,y+3,30,44);
     }
     private void downloadImages()
     {
@@ -32,20 +32,23 @@ public class Nitro {
             e.printStackTrace();
         }
     }
+    public void takeNitro(){
+        pickedUp=true;
+        hitbox.setLocation(-500,-500);
+    }
+    public void nitroUsage(){
+        time--;
+    }
     public void generateonMap(Graphics2D g2d){
-        g2d.drawImage(nitro,x,y,derby.samochodSize,derby.samochodSize,null);
+        if(!pickedUp)
+            g2d.drawImage(nitro,x+10,y+3,30,44,null);
     }
     public int getId(){return id;}
-    
-    public Rectangle getHitbox(){return hitbox;}
-    
-    public int getSpeed() {return speed;}
-    public void setSpeed(int newSpeed) {speed = newSpeed;}
-    public double getTime() {return time;}
-    public void setTime(double czas) {time = czas;}
-    public void SetX(int x_) {x = x_;}
-    public void SetY(int y_) {y = y_;}
-    public boolean getGotNitro() {return gotNitroMod;}
-    public void setGotNitroMod(boolean getter) {gotNitroMod = getter;}
+    public Rectangle getHitbox(){
+        return hitbox;
+    }
+    public int getTime(){
+        return time;
+    }
 
 }

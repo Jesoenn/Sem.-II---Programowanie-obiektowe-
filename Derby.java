@@ -5,9 +5,9 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Derby extends JPanel {
-    private int carsNormalAmount=8; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGLOWNY
-    private int wallsAmount=5; //Tymczasowo ile scian
-    private int nitroAmount = 10; //Tymczasowo ile nitr - uzytkownik podaje
+    private int carsNormalAmount=5; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGLOWNY
+    private int wallsAmount=1; //Tymczasowo ile scian
+    private int nitroAmount=10; //Tymczasowo ile nitr - uzytkownik podaje
     private int carsExplosiveAmount,carsTirePopersAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
     public static final int samochodSize=50; //wielkosc samochodu w pixelach
     public static final int screenX=650; //rozmiar ekranu
@@ -46,8 +46,10 @@ public class Derby extends JPanel {
                 }
             }
         }
-        for(Samochod car: normalCars)
+        for(Samochod car: normalCars){
             car.updateWalls();
+            car.updateNitros();
+        }
     }
     //rozpoczecie symulacji
     public void start(){
@@ -65,22 +67,6 @@ public class Derby extends JPanel {
             }
             gameStateUpdate();
             repaint();
-            for(Nitro nitro: nitros)
-            {
-                if(nitro.getGotNitro() == true)
-                {
-                    nitro.setTime(nitro.getTime() - frameTime / 1000);
-                    nitro.SetX(-50);    // narazie wywalenie za mape
-                    nitro.SetY(-50);
-                }
-                if(nitro.getTime() <= 0.0)
-                {
-                    nitro.setSpeed(0);
-                    nitro.SetX(-50);    // narazie wywalenie za mape
-                    nitro.SetY(-50);
-                    // nitro = null; nitro.finalize(); nie znalazlem nic narazie z destrukcja obiektow w javie(c++ np. ma destruktory)
-                }
-            }
         }
     }
     //zaktualiziowanie obecnego stanu rozgrywki

@@ -24,7 +24,11 @@
         private int killCount; // ile samochodow pokonal dany samochod
         private ArrayList<Samochod> cars;
         private ArrayList<Sciana> walls;
-        int iterationsWithoutMoving=0;
+        private ArrayList<Nitro> nitros;
+        private boolean usingNitro=false;
+        private Nitro myNitro;
+        private boolean alive=true;
+        private int iterationsWithoutMoving=0;
         public Samochod(Derby derby, int givenX, int givenY){
             this.derby = derby;
             //tymczasowo, zrobic losowo, zeby nic na siebie nie nachodzilo - najpierw generowana map
@@ -52,9 +56,6 @@
                 e.printStackTrace();
             }
         }
-        public void updateCars(){
-            cars=derby.normalCars;
-        }
         public void updateWalls(){
             walls=derby.walls;
         }
@@ -64,7 +65,7 @@
                 targetId=generateNumber.nextInt(carCount);
             }
             Samochod tempCar=cars.get(targetId);
-            if(tempCar.gethp()<=0){
+            if(!tempCar.isAlive()){
                 targetId=carId;
             }
         }
@@ -72,6 +73,16 @@
         public void update(){
             updateCars();
             if(hp>0){
+                //Zuzycie nitra
+                if(usingNitro){
+                    myNitro.nitroUsage();
+                    if(myNitro.getTime()<=0){
+                        usingNitro=false;
+                        speed-=myNitro.speedBoost;
+                        myNitro=null;
+                    }
+                }
+                System.out.println("carId: " + carId + ", carsAlive: " + carsAlive + ", spaceFound: " + spaceFound + ", resetPreviousTarget: " + resetPreviousTarget); // DO USUNIECIA
                 //Zapobiega utknieciu samochodu w 1 miejscu na dluzej niz sekunde
                 if(x==prevX && y==prevY){
                     iterationsWithoutMoving++;
@@ -94,6 +105,8 @@
                 else if((targetId==-1 && !spaceFound) || iterationsWithoutMoving>=60){
                     iterationsWithoutMoving=0;
                     targetId=-1;
+                    if(carsAlive==2)
+                        prevTargetId=carId;
                     findEmptySpaceOnMap(derby.map.getMap());
                     moveToEmptySpace();
                 }
@@ -159,8 +172,10 @@
                     y=prevY;
                     prevTargetId=targetId;
                     targetId=carId;
-                    if(carsAlive==2)
+                    if(carsAlive==2){
                         resetPreviousTarget=true;
+                        prevTargetId=targetId;
+                    }
                     spaceFound=false; //po zderzeniu ze sciana przerwanie jechania na puste pole
                     hitbox.setLocation(x, y);
                     findTarget(); //Po zderzeniu zmienia target
@@ -177,6 +192,17 @@
                     if(carsAlive==2)
                         resetPreviousTarget=false;
                     break;
+                }
+            }
+            if(!usingNitro){
+                for(Nitro nitro: nitros){
+                    if(hitbox.intersects(nitro.getHitbox())){
+                        myNitro=nitro;
+                        usingNitro=true;
+                        nitro.takeNitro();
+                        speed+=nitro.speedBoost;
+                        break;
+                    }
                 }
             }
         }
@@ -201,7 +227,9 @@
             else if(speed==enemy.getSpeed())
                 damage=25; //TYMCZASOWO ZEBY SZYBKO UMARL
             enemy.sethp(enemy.gethp()-damage);
-            if(enemy.gethp()<=0){
+            //Usmiercenie samochodu
+            if(enemy.gethp()<=0 && enemy.isAlive()){
+                enemy.setDead();
                 carsAlive--;
                 System.out.println("Samochodow w symulacji: "+carsAlive);
             }
@@ -224,6 +252,12 @@
             //POTEM WRZUCIC 2 LINIJKI PONIZEJ DO IFA
             g2d.setColor(Color.red);
             g2d.drawString(String.valueOf(hp)+" id:"+carId,x,y);
+        }
+        public void updateCars(){
+            cars=derby.normalCars;
+        }
+        public void updateNitros(){
+            nitros=derby.nitros;
         }
         private double calculateDistance(int x1, int y1, int x2, int y2) {
             return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
@@ -257,5 +291,11 @@
         }
         public void sethp(int hp){
             this.hp=hp;
+        }
+        public boolean isAlive(){
+            return alive;
+        }
+        public void setDead(){
+            alive=false;
         }
     }

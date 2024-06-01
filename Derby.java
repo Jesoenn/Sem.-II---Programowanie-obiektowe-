@@ -81,6 +81,51 @@ public class Derby extends JPanel {
                     // nitro = null; nitro.finalize(); nie znalazlem nic narazie z destrukcja obiektow w javie(c++ np. ma destruktory)
                 }
             }
+            // Dla 2 pojazdow dziala ale jeszcze dokoncze mam pomysl jak
+            if((Samochod.carCount - Samochod.bodyCount == 2) || Samochod.carCount == 2) // zostaly 2 auta na mapie (TU NIE WYWALA STACKOVERFLOW, ALE NIE DZIALA)
+            {
+                Samochod car1;
+                for(int i = 0; i < normalCars.size(); i++) {
+                    car1 = normalCars.get(i);
+                    if(car1.getCarId() < 90) { // dla zywych pojazdow
+                        car1.findEmptySpaceOnMap(map.getMap()); // biero i szukajo miejsca do pojechania
+                    }
+                }
+                for(int i = 0; i < normalCars.size(); i++) { 
+                    car1 = normalCars.get(i);
+                    if(car1.getCarId() < 90) { 
+                        car1.moveToEmptySpace();
+                    }
+                }
+                for(int i = 0; i < normalCars.size(); i++) { 
+                    car1 = normalCars.get(i);
+                    if(car1.getCarId() < 90) { 
+                        car1.findTarget();
+                    }
+//                    car1.findTarget();
+                }
+            }
+            if(Samochod.carCount - Samochod.bodyCount == 1) // pozostal 1 samochod(DZIALA)
+            {
+                boolean winMode = true;
+                int j = 0;
+                for(Samochod winner: normalCars) {
+                    for (Integer i : Samochod.graveYard) {
+                        if (winner.getCarId() == i) {
+                            winMode = false;
+                            break;
+                        }
+                        if (j == Samochod.graveYard.size() && winner.getCarId() != i) {
+                            winMode = true;
+                        }
+                        j++;
+                    }
+                    if (winMode == true) {
+                        System.out.println("The winner of Derby is: " + winner.getCarId() + " !!!");
+                        break;
+                    }
+                }
+            }
         }
     }
     //zaktualiziowanie obecnego stanu rozgrywki

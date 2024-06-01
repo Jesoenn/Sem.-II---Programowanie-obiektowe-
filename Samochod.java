@@ -22,9 +22,11 @@
         private Random generateNumber=new Random();
         private Rectangle hitbox; // DO ZROBIENIA HITBOXY INTERSECTS
         private int killCount; // ile samochodow pokonal dany samochod
+        public static ArrayList<Integer> graveYard = new ArrayList<>(); // przechowuje id pokonanych aut(do losowania id tych co przezyli)
         public static int bodyCount = 0; // ile odpadlo z walki
         private boolean deathMod; // do znoszenia ograniczenia blokady wyjscia z mapy(wtedy wywalamy auto za mape)
         static int addToDeathCar; // licznik dodawany do przegranych zeby mieli nadal unikalne id
+        private boolean lastCarsMode; // zmienna mod. (do dok.)
         private ArrayList<Samochod> cars;
         private ArrayList<Sciana> walls;
         private ArrayList<Nitro> nitros;
@@ -68,9 +70,24 @@
         }
         //szukanie przeciwnika
         public void findTarget(){
-            while(targetId==carId || targetId==prevTargetId){
-                targetId=generateNumber.nextInt(carCount);
+           boolean graveMode = false;
+            if(carCount != 2 || (carCount - bodyCount != 2))
+            {
+            while (targetId == carId || targetId == prevTargetId) {
+                targetId = generateNumber.nextInt(carCount);
+                if(graveYard.size() != 0) { // sprawdzenie czy nie wybral na target pokonanego
+                    for (int j = 0; j < graveYard.size(); j++) {
+                        if(targetId == graveYard.get(j)){
+                            graveMode = true;
+                        }
+                    }
+                }
+                if(graveMode == true)
+                    findTarget();
             }
+                System.out.println("target ID: " + targetId); // do testow
+            }
+
         }
         //aktualizacja przeciwnika samochodu
         public void update(){
@@ -170,17 +187,17 @@
                     nitro.setGotNitroMod(true); // final countdown dla dzialania nitra
                 }
             }
-            //NA RAZIE TYLKO ZATRZYMUJE, NIE ZNIKA
-            if(hp<=0)
-                speed=0;
+            if(hp<=0 && getCarId() < 99) { // nie wykonuje sie dla poleglych pojazdow
                 deathMod = true; // ominiecie warunku pozostania w polu mapy
+                speed = 0;
                 x = -100; // wywalenie za mape
                 y = -100;
                 bodyCount++;
-//              graveYard.add(getCarId()); to byl pomysl zeby sprawdzac po array'u id martwych aut i wybieral te ktore pozostaly na mapie
+                graveYard.add(getCarId()); // dodanie do "cmentarza" poleglych pojazdow
                 setId(99+addToDeathCar);
+                addToDeathCar++;
                 setTargetId(carId);
-        }
+            }
         public void findEmptySpaceOnMap(int[][] map){
             int newY=generateNumber.nextInt(derby.squaresY);
             int newX=generateNumber.nextInt(derby.squaresX);

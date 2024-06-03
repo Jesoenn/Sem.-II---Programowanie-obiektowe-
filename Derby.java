@@ -19,6 +19,7 @@ public class Derby extends JPanel {
     public ArrayList<Samochod> normalCars=new ArrayList<>(); //tymczasowo public
     public ArrayList<Sciana> walls=new ArrayList<>(); //tymczasowo public
     public ArrayList<Nitro> nitros=new ArrayList<>();
+    public double simulationTime = 6.0; // czas do konca trwania symulacji
     //ponizej do testow
     //Samochod samochod1=new Samochod(this,50,50);
     //Samochod samochod2=new Samochod(this,500,500);
@@ -56,12 +57,13 @@ public class Derby extends JPanel {
         double frameTime=16.66667; //60FPS - 1/60*1000ms
         double nextFrame=System.currentTimeMillis()+frameTime; //kiedy nastepna klatka
         double timeLeft; //czas pozostaly do nastepnej klatki
-        while(true){
+        while(simulationTime > 0.0){
             try{
                 timeLeft=nextFrame-System.currentTimeMillis();
                 if(timeLeft>0) //jezeli jeszcze zostal czas
                     Thread.sleep((long)timeLeft);
                 nextFrame=System.currentTimeMillis()+frameTime;
+                simulationTime -= frameTime/1000.0;
             }catch(Exception e){
                 e.printStackTrace();
             }

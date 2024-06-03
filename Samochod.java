@@ -22,7 +22,12 @@
         private Random generateNumber=new Random();
         private Rectangle hitbox;
         private int killCount; // ile samochodow pokonal dany samochod
+        private int a,b; // wspolczynniki f. liniowej potrzebnej do skrecania i poruszania sie
+        private int xEquals; // gdy tg(alfa) = pipuł
+        private double actuallAngle; // przechowuje kat, pod jakim nachylony jest samochod
+        private int turningX, turningY; // punkt wzgledem ktorego skreca
         private ArrayList<Samochod> cars;
+        public ArrayList<Samochod> Ranking; // do rankingu samochodow
         private ArrayList<Sciana> walls;
         private ArrayList<Nitro> nitros;
         private boolean usingNitro=false;
@@ -35,6 +40,15 @@
             waga=1500;
             speed=1;
             carsAlive++;
+            // do skrecania ponizej:
+            
+            /*xEquals = speed;
+            actuallAngle = 90.0; // przy tg(alfa) = 90
+            a = 0; // i tak nie wykorzystywane przy xEquals = speed
+            b = y; // tez defaultowa wartosc
+            turningX = 0;
+            turningY = 0;*/
+            
             //ponizej koncowe, nie zmieniac
             downloadImages();
             prevY=y=givenY;
@@ -135,6 +149,56 @@
                 y-=speed;
             else if(y<targetY && y< derby.screenY)
                 y+=speed;
+
+            //    PONIZEJ BUGOWATE SKRECANIE(DO DOROBIENIA)
+            /* if((targetY-b)/Math.tan(actuallAngle*2*3.14/360) < getCurrentX()) // jesli przeciwnik jest na prawo
+            {
+                actuallAngle += 2; // jeden stopien na iteracje
+                if(actuallAngle == 0 || actuallAngle == 180)
+                {
+                    xEquals = speed;
+                    x += speed;
+                }
+                else if(actuallAngle != 90)
+                {
+                    x += turningAngle*Math.sin(actuallAngle*2*3.14/360);
+                }
+                if(targetY < y && y > 0)
+                {
+                    y -= turningAngle*Math.cos(actuallAngle*2*3.14/360);
+                }
+                else if(targetY > y && y < derby.screenY)
+                {
+                    y += turningAngle*Math.cos(actuallAngle);
+                }
+            }
+            else if((target.getCurrentY()-b)/Math.tan(actuallAngle*2*3.14/360) > getCurrentX()) // jesli przeciwnik jest na lewo
+            {
+                actuallAngle -= 1;
+                if(actuallAngle == 0 || actuallAngle == 180)
+                {
+                    xEquals = speed;
+                }
+                else if(actuallAngle != 90)
+                {
+                    x -= turningAngle*Math.sin(actuallAngle*2*3.14/360);
+                }
+                if(targetY < y && y > 0)
+                {
+                    y -= turningAngle*Math.cos(actuallAngle*2*3.14/360);
+                }
+                else if(targetY > y && y < derby.screenY)
+                {
+                    y += turningAngle*Math.cos(actuallAngle*2*3.14/360);
+                }
+            }
+            else if((target.getCurrentY()-b)/Math.tan(actuallAngle*2*3.14/360) == getCurrentX())
+            {
+                // ruch prosto na przeciwnika
+                x += speed;
+                y += Math.tan(actuallAngle*2*3.14/360)*getCurrentX() + b;
+            }
+            b = y;*/
             hitbox.setLocation(x,y);
             checkCollision();
         }
@@ -248,10 +312,29 @@
                 else if(prevX==x && prevY==y){
                     g2d.drawImage(up,x,y, derby.samochodSize, derby.samochodSize,null);
                 }
+                g2d.setColor(Color.red);
+                g2d.drawString(String.valueOf(hp)+" id:"+carId,x,y);
             }
             //POTEM WRZUCIC 2 LINIJKI PONIZEJ DO IFA
-            g2d.setColor(Color.red);
-            g2d.drawString(String.valueOf(hp)+" id:"+carId,x,y);
+            if(derby.simulationTime <= 0.0) {
+                g2d.setColor(Color.CYAN);
+                g2d.drawString("KONIEC CZASU", 325, 325); // wstepnie, potem moze byc jakis obrazek ladny + wyniki
+                showRank();
+            }
+        }
+        public void showRank()
+        {
+            int counter = 0;
+            if(Ranking.isEmpty())
+            {
+                System.out.println("Żaden pojazd nie poległ, nie ma więc rankingu");
+            }
+            else {
+                for (Samochod car : Ranking) {
+                    System.out.println("miejsce: " + (carCount - counter) + ", ID samochodu: " + car.getCarId());
+                    counter++;
+                }
+            }
         }
         public void updateCars(){
             cars=derby.normalCars;
@@ -297,5 +380,6 @@
         }
         public void setDead(){
             alive=false;
+            Ranking.add(this);
         }
     }

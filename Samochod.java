@@ -291,8 +291,14 @@
                 damage=25; //TYMCZASOWO ZEBY SZYBKO UMARL
             enemy.sethp(enemy.gethp()-damage);
             //Usmiercenie samochodu
+            checkDeath(enemy);
+        }
+        public void checkDeath(Samochod enemy){
             if(enemy.gethp()<=0 && enemy.isAlive()){
                 enemy.setDead();
+                if(enemy instanceof SamochodWybuchowy){
+                    ((SamochodWybuchowy) enemy).Eksplozja();
+                }
                 carsAlive--;
                 System.out.println("Samochodow w symulacji: "+carsAlive);
             }
@@ -322,7 +328,7 @@
         public void updateNitros(){
             nitros=derby.nitros;
         }
-        private double calculateDistance(int x1, int y1, int x2, int y2) {
+        protected double calculateDistance(int x1, int y1, int x2, int y2) {
             return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
         }
         public void setSpeed(int speed){

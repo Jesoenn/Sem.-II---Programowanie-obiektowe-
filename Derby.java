@@ -1,13 +1,14 @@
 package org.project;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class Derby extends JPanel {
-    private int carsNormalAmount=2; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGLOWNY
-    private int carsExplosiveAmount=7;
-    private int wallsAmount=1; //Tymczasowo ile scian
+    private int carsNormalAmount=6; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGLOWNY
+    private int carsExplosiveAmount=3;
+    private int wallsAmount=6; //Tymczasowo ile scian
     private int nitroAmount=10; //Tymczasowo ile nitr - uzytkownik podaje
     private int carsTirePopersAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
     public static final int samochodSize=50; //wielkosc samochodu w pixelach
@@ -20,13 +21,18 @@ public class Derby extends JPanel {
     public ArrayList<Samochod> normalCars=new ArrayList<>(); //tymczasowo public
     public ArrayList<Sciana> walls=new ArrayList<>(); //tymczasowo public
     public ArrayList<Nitro> nitros=new ArrayList<>();
-    public double simulationTime = 500.0; // czas do konca trwania symulacji
+    private Image koniecrozgrywki;
+    private boolean simulationFinished=false;
+    private double simulationTime = 10.0; // czas do konca trwania symulacji w sekundach
+    private int minutes=0;
+    private int seconds=0;
     //ponizej do testow
     //Samochod samochod1=new Samochod(this,50,50);
     //Samochod samochod2=new Samochod(this,500,500);
     public Derby(){
         setPreferredSize(new Dimension(screenX,screenY));
         setDoubleBuffered(true); //rysowanie wszystkiego jednoczesnie na ekranie
+        downloadImages();
     }
     //ustawienie pozycji startowych (na razie dla samochodow zwyklych)
     public void setStartingPositions(){
@@ -61,7 +67,7 @@ public class Derby extends JPanel {
         double frameTime=16.66667; //60FPS - 1/60*1000ms
         double nextFrame=System.currentTimeMillis()+frameTime; //kiedy nastepna klatka
         double timeLeft; //czas pozostaly do nastepnej klatki
-        while(simulationTime > 0.0){
+        while(simulationTime > 0.0 && !simulationFinished){
             try{
                 timeLeft=nextFrame-System.currentTimeMillis();
                 if(timeLeft>0) //jezeli jeszcze zostal czas
@@ -71,9 +77,13 @@ public class Derby extends JPanel {
             }catch(Exception e){
                 e.printStackTrace();
             }
+            minutes=(int)simulationTime/60;
+            seconds=(int)simulationTime%60;
             gameStateUpdate();
             repaint();
         }
+        simulationFinished=true;
+        repaint();
     }
     //zaktualiziowanie obecnego stanu rozgrywki
     /*public void gameStateUpdate(){
@@ -92,6 +102,8 @@ public class Derby extends JPanel {
         }
     }*/
     public void gameStateUpdate(){
+        if(normalCars.get(0).getCarsAlive()<=1)
+            simulationFinished=true;
         for(Samochod normalCar: normalCars){
             normalCar.update();
         }
@@ -105,6 +117,7 @@ public class Derby extends JPanel {
         }
         for(Samochod normalCar: normalCars){
             if(normalCar instanceof SamochodWybuchowy){
+                //jezeli samochod wybuchl, to rysuj wybuch
                 if(((SamochodWybuchowy) normalCar).getExploded() && ((SamochodWybuchowy) normalCar).getExplosionLength()>0){
                     ((SamochodWybuchowy) normalCar).explosion(g2d);
                 }
@@ -115,6 +128,18 @@ public class Derby extends JPanel {
         }
         for(Sciana wall: walls){
             wall.generateOnMap(g2d);
+        }
+        if(simulationFinished)
+            g2d.drawImage(koniecrozgrywki,(screenX-542)/2,(screenY-26)/2,null);
+        g2d.setColor(Color.white);
+        g2d.setFont(new Font("default", Font.BOLD, 40));
+        g2d.drawString(minutes+":"+seconds,screenX/2-38,40);
+    }
+    public void downloadImages(){
+        try{
+            koniecrozgrywki=ImageIO.read(getClass().getResource("/extra/koniecrozgrywki.png"));
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
     public int getWallsAmount(){

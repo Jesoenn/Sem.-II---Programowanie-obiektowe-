@@ -5,8 +5,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Derby extends JPanel {
-    private int carsNormalAmount=5; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGLOWNY
-    private int carsExplosiveAmount=3;
+    private int carsNormalAmount=2; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGLOWNY
+    private int carsExplosiveAmount=7;
     private int wallsAmount=1; //Tymczasowo ile scian
     private int nitroAmount=10; //Tymczasowo ile nitr - uzytkownik podaje
     private int carsTirePopersAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
@@ -102,6 +102,13 @@ public class Derby extends JPanel {
         map.drawMap(g2d);
         for(Nitro nitro: nitros){
             nitro.generateonMap(g2d);
+        }
+        for(Samochod normalCar: normalCars){
+            if(normalCar instanceof SamochodWybuchowy){
+                if(((SamochodWybuchowy) normalCar).getExploded() && ((SamochodWybuchowy) normalCar).getExplosionLength()>0){
+                    ((SamochodWybuchowy) normalCar).explosion(g2d);
+                }
+            }
         }
         for(Samochod normalCar: normalCars){
             normalCar.updateOnMap(g2d);

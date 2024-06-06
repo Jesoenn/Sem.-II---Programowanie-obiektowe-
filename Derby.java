@@ -77,6 +77,7 @@ public class Derby extends JPanel {
             }catch(Exception e){
                 e.printStackTrace();
             }
+            //czas do zakonczenia
             minutes=(int)simulationTime/60;
             seconds=(int)simulationTime%60;
             gameStateUpdate();
@@ -129,8 +130,9 @@ public class Derby extends JPanel {
         for(Sciana wall: walls){
             wall.generateOnMap(g2d);
         }
-        if(simulationFinished)
+        if(simulationFinished) //Napis KONIEC ROZGRYWKI
             g2d.drawImage(koniecrozgrywki,(screenX-542)/2,(screenY-26)/2,null);
+        //Wyswietlenie czasu na ekranie
         g2d.setColor(Color.white);
         g2d.setFont(new Font("default", Font.BOLD, 40));
         g2d.drawString(minutes+":"+seconds,screenX/2-38,40);

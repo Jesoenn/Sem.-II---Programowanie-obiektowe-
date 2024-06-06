@@ -7,14 +7,14 @@ import java.util.Random;
 public class SamochodWybuchowy extends Samochod{
     public static final double promien_obrazen=100;
     private boolean exploded=false;
-    private int explosionLength=60; // klatek
+    private int explosionLength=60; // dlugosc w klatkach
     private Ellipse2D pole_razenia;
     SamochodWybuchowy(Derby derby, int givenX, int givenY)
     {
         super(derby, givenX, givenY);
     }
     @Override
-    public void downloadImages(){ //Byc moze zmienic zdjecia dla klas pochodnych - inne kolory aut
+    public void downloadImages(){
         try{
             up=ImageIO.read(getClass().getResource("/redcar/carRedUp.png"));
             right=ImageIO.read(getClass().getResource("/redcar/carRedRight.png"));
@@ -24,19 +24,20 @@ public class SamochodWybuchowy extends Samochod{
             e.printStackTrace();
         }
     }
+    //wywolanie juz po smierci
     public void Eksplozja()
     {
         exploded=true;
         pole_razenia=new Ellipse2D.Double(x+derby.samochodSize/2-promien_obrazen,y+derby.samochodSize/2-promien_obrazen,promien_obrazen*2,promien_obrazen*2);
         for(Samochod car: cars){
             if(pole_razenia.intersects(car.getHitbox()) && car.getCarId()!=carId){
-                car.sethp(car.gethp()-50);
+                car.sethp(car.gethp()-30);
                 checkDeath(car);
             }
         }
-        // to moze do zrobienia jak sie ogarnie strate zycia samochodu
     }
     public void explosion(Graphics2D g2d){
+        g2d.setColor(Color.orange);
         g2d.fill(pole_razenia);
         explosionLength--;
     }

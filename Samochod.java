@@ -6,34 +6,33 @@
     import java.util.Random;
 
     public class Samochod {
-        private static int carCount=0;   //ile samochodow - za tego pomocą ustawienie ich id
-        private static int carsAlive=0; private boolean resetPreviousTarget=false;
-        private int carId;
-        private int prevTargetId,targetId; //id samochodu (od 0), id celu, do którego będzie się poruszać
+        protected static int carCount=0;   //ile samochodow - za tego pomocą ustawienie ich id
+        protected static int carsAlive=0; protected boolean resetPreviousTarget=false;
+        protected int carId;
+        protected int prevTargetId,targetId; //id samochodu (od 0), id celu, do którego będzie się poruszać
         public boolean collision=false; //przy kolizji zmieniam na true
-        private int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
-        private int waga,speed;
-        private int xMap,yMap; private boolean spaceFound=false;
-        private int hp; // Punkty zycia
-        private double turningAngle; // promien skretu
-        private boolean tires; // stan opon samochodu(narazie tak ze jak raz sie uszkodzi to zmiana na bool'u i potem przy uszkodzeniu nic sie wiecej nie zmienia)
-        private Image up,right,down,left; //Zdjecia samochodu obroconego w rozne strony
-        private Derby derby;
-        private Random generateNumber=new Random();
-        private Rectangle hitbox;
+        protected int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
+        protected int waga,speed;
+        protected int xMap,yMap; private boolean spaceFound=false;
+        protected int hp; // Punkty zycia
+        protected double turningAngle; // promien skretu
+        protected boolean tires; // stan opon samochodu(narazie tak ze jak raz sie uszkodzi to zmiana na bool'u i potem przy uszkodzeniu nic sie wiecej nie zmienia)
+        protected Image up,right,down,left; //Zdjecia samochodu obroconego w rozne strony
+        protected Derby derby;
+        protected Random generateNumber=new Random();
+        protected Rectangle hitbox;
         private int killCount; // ile samochodow pokonal dany samochod
         private int a,b; // wspolczynniki f. liniowej potrzebnej do skrecania i poruszania sie
         private int xEquals; // gdy tg(alfa) = pipuł
         private double actuallAngle; // przechowuje kat, pod jakim nachylony jest samochod
         private int turningX, turningY; // punkt wzgledem ktorego skreca
-        private ArrayList<Samochod> cars;
-        public ArrayList<Samochod> Ranking; // do rankingu samochodow
-        private ArrayList<Sciana> walls;
-        private ArrayList<Nitro> nitros;
-        private boolean usingNitro=false;
-        private Nitro myNitro;
-        private boolean alive=true;
-        private int iterationsWithoutMoving=0;
+        protected ArrayList<Samochod> cars;
+        protected ArrayList<Sciana> walls;
+        protected ArrayList<Nitro> nitros;
+        protected boolean usingNitro=false;
+        protected Nitro myNitro;
+        protected boolean alive=true;
+        protected int iterationsWithoutMoving=0;
         public Samochod(Derby derby, int givenX, int givenY){
             this.derby = derby;
             //tymczasowo, zrobic losowo, zeby nic na siebie nie nachodzilo - najpierw generowana map
@@ -60,12 +59,12 @@
             prevTargetId=carId;
             hp=100;
         }
-        private void downloadImages(){ //Byc moze zmienic zdjecia dla klas pochodnych - inne kolory aut
+        public void downloadImages(){ //Byc moze zmienic zdjecia dla klas pochodnych - inne kolory aut
             try{
-                up=ImageIO.read(getClass().getResource("/carYellowUp.png"));
-                right=ImageIO.read(getClass().getResource("/carYellowRight.png"));
-                down=ImageIO.read(getClass().getResource("/carYellowDown.png"));
-                left=ImageIO.read(getClass().getResource("/carYellowLeft.png"));
+                up=ImageIO.read(getClass().getResource("/yellowcar/carYellowUp.png"));
+                right=ImageIO.read(getClass().getResource("/yellowcar/carYellowRight.png"));
+                down=ImageIO.read(getClass().getResource("/yellowcar/carYellowDown.png"));
+                left=ImageIO.read(getClass().getResource("/yellowcar/carYellowLeft.png"));
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -312,29 +311,10 @@
                 else if(prevX==x && prevY==y){
                     g2d.drawImage(up,x,y, derby.samochodSize, derby.samochodSize,null);
                 }
-                g2d.setColor(Color.red);
-                g2d.drawString(String.valueOf(hp)+" id:"+carId,x,y);
             }
+            g2d.setColor(Color.red);
+            g2d.drawString(String.valueOf(hp)+" id:"+carId,x,y);
             //POTEM WRZUCIC 2 LINIJKI PONIZEJ DO IFA
-            if(derby.simulationTime <= 0.0) {
-                g2d.setColor(Color.CYAN);
-                g2d.drawString("KONIEC CZASU", 325, 325); // wstepnie, potem moze byc jakis obrazek ladny + wyniki
-                showRank();
-            }
-        }
-        public void showRank()
-        {
-            int counter = 0;
-            if(Ranking.isEmpty())
-            {
-                System.out.println("Żaden pojazd nie poległ, nie ma więc rankingu");
-            }
-            else {
-                for (Samochod car : Ranking) {
-                    System.out.println("miejsce: " + (carCount - counter) + ", ID samochodu: " + car.getCarId());
-                    counter++;
-                }
-            }
         }
         public void updateCars(){
             cars=derby.normalCars;
@@ -380,6 +360,5 @@
         }
         public void setDead(){
             alive=false;
-            Ranking.add(this);
         }
     }

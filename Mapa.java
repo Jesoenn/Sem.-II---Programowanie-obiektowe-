@@ -13,6 +13,7 @@ public class Mapa {
         map=new int[derby.squaresY][derby.squaresX]; // wiersze/kolumny
         downloadImages();
         generateLocation(derby.getCarsNormalAmount(),3);
+        generateLocation(derby.getCarsExplosiveAmount(),4);
         generateLocation(derby.getNitroAmount(),6);
         generateWallsLocation(derby.getWallsAmount());
     }

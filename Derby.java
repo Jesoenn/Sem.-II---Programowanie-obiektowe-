@@ -6,9 +6,10 @@ import java.util.ArrayList;
 
 public class Derby extends JPanel {
     private int carsNormalAmount=5; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGLOWNY
+    private int carsExplosiveAmount=3;
     private int wallsAmount=1; //Tymczasowo ile scian
     private int nitroAmount=10; //Tymczasowo ile nitr - uzytkownik podaje
-    private int carsExplosiveAmount,carsTirePopersAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
+    private int carsTirePopersAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
     public static final int samochodSize=50; //wielkosc samochodu w pixelach
     public static final int screenX=650; //rozmiar ekranu
     public static final int screenY=650;
@@ -19,7 +20,7 @@ public class Derby extends JPanel {
     public ArrayList<Samochod> normalCars=new ArrayList<>(); //tymczasowo public
     public ArrayList<Sciana> walls=new ArrayList<>(); //tymczasowo public
     public ArrayList<Nitro> nitros=new ArrayList<>();
-    public double simulationTime = 6.0; // czas do konca trwania symulacji
+    public double simulationTime = 500.0; // czas do konca trwania symulacji
     //ponizej do testow
     //Samochod samochod1=new Samochod(this,50,50);
     //Samochod samochod2=new Samochod(this,500,500);
@@ -35,6 +36,9 @@ public class Derby extends JPanel {
             for(int j=0; j<squaresX; j++){
                 if(startingMap[i][j]==3){
                     normalCars.add(new Samochod(this,j*samochodSize,i*samochodSize));
+                }
+                else if(startingMap[i][j]==4){
+                    normalCars.add(new SamochodWybuchowy(this,j*samochodSize,i*samochodSize));
                 }
                 else if(startingMap[i][j]==1){
                     walls.add(new Sciana(this,j*samochodSize,i*samochodSize,"vertical"));
@@ -111,6 +115,9 @@ public class Derby extends JPanel {
     }
     public int getCarsNormalAmount(){
         return carsNormalAmount;
+    }
+    public int getCarsExplosiveAmount(){
+        return carsExplosiveAmount;
     }
     public int getNitroAmount(){
         return nitroAmount;

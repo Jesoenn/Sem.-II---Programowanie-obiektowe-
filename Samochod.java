@@ -4,6 +4,7 @@
     import java.awt.*;
     import java.util.ArrayList;
     import java.util.Random;
+    import java.lang.Math;
 
     public class Samochod {
         protected static int carCount=0;   //ile samochodow - za tego pomocą ustawienie ich id
@@ -15,7 +16,7 @@
         protected int waga,speed;
         protected int xMap,yMap; private boolean spaceFound=false;
         protected int hp; // Punkty zycia
-        protected double turningAngle; // promien skretu
+        protected double turningRadius; // promien skretu
         protected boolean tires; // stan opon samochodu(narazie tak ze jak raz sie uszkodzi to zmiana na bool'u i potem przy uszkodzeniu nic sie wiecej nie zmienia)
         protected Image up,right,down,left; //Zdjecia samochodu obroconego w rozne strony
         protected Derby derby;
@@ -46,7 +47,8 @@
             a = 0; // i tak nie wykorzystywane przy xEquals = speed
             b = y; // tez defaultowa wartosc
             turningX = 0;
-            turningY = 0;*/
+            turningY = 0;
+            turningRadius = 25;*/
             
             //ponizej koncowe, nie zmieniac
             downloadImages();
@@ -150,56 +152,65 @@
                 y+=speed;
 
             //    PONIZEJ BUGOWATE SKRECANIE(DO DOROBIENIA)
-            /* if((targetY-b)/Math.tan(actuallAngle*2*3.14/360) < getCurrentX()) // jesli przeciwnik jest na prawo
+            // Note: przyjalem uklad wspolrzednych taki ze x to y, a y to x(na przykladzie f. liniowej: x = ay+b zamiast y = ax+b (tzn wykonalem obrot mapy o 90 stopni))
+            /*if((targetX-b)/Math.tan(actuallAngle*3.14/180) < targetY) // jesli przeciwnik jest na prawo
             {
-                actuallAngle += 2; // jeden stopien na iteracje
-                if(actuallAngle == 0 || actuallAngle == 180)
+                // y = a1(x - x0) + y0, gdzie a1 = -1/a. <- wzor do f. liniowej _|_ do kierunkowej i przech. przez sr. samochodu
+                System.out.println("Target na prawo");
+                actuallAngle += 0.1;
+                if(actuallAngle == 360) // chociaz i tak to bez znaczenia
+                    actuallAngle = 0;
+                a = Math.tan(actuallAngle*3.14/180);
+                a1 = -1/a;
+
+                // \/ aktualizacja wspolrzednych punktu, wzgledem ktorego wykonuje sie obrot w kolko
+                turningX = x +(int)Math.sqrt(turningRadius*turningRadius/(1+(1/a1*a1)));
+                turningY = y + (int)((Math.sqrt(turningRadius*turningRadius/(1+(1/a1*a1)))-b)/a);
+                System.out.println("a1 : " + a1);
+                y = turningY + (int)Math.round(turningRadius *Math.sin(actuallAngle*2*3.14/180)); // zamiana stopni na radiany
+                if(targetX < x && x > 0) // przeciwnik na gorze
                 {
-                    xEquals = speed;
-                    x += speed;
+                    x = turningX - (int)(turningRadius *Math.cos(actuallAngle*2*3.14/180));
+                    System.out.println((int)(turningRadius *Math.cos(actuallAngle*2*3.14/180)) + " vs " + turningRadius *Math.cos(actuallAngle*2*3.14/180));
                 }
-                else if(actuallAngle != 90)
+                else if(targetX > x && x < derby.screenX) // przeciwnik na dole
                 {
-                    x += turningAngle*Math.sin(actuallAngle*2*3.14/360);
-                }
-                if(targetY < y && y > 0)
-                {
-                    y -= turningAngle*Math.cos(actuallAngle*2*3.14/360);
-                }
-                else if(targetY > y && y < derby.screenY)
-                {
-                    y += turningAngle*Math.cos(actuallAngle);
+                    x = turningX + (int)Math.round(turningRadius *Math.cos(actuallAngle*2*3.14/180));
                 }
             }
-            else if((target.getCurrentY()-b)/Math.tan(actuallAngle*2*3.14/360) > getCurrentX()) // jesli przeciwnik jest na lewo
+            else if((targetX-b)/Math.tan(actuallAngle*3.14/180) > targetY) // jesli przeciwnik jest na lewo
             {
-                actuallAngle -= 1;
-                if(actuallAngle == 0 || actuallAngle == 180)
+                turningX += (int)Math.sqrt(1 - y*y);
+                System.out.println("Target na lewo");
+                actuallAngle -= 0.1;
+                if(actuallAngle < 0)
+                    actuallAngle = 359.9;
+                a = Math.tan(actuallAngle*3.14/180);
+                a1 = -1/a;
+
+                turningX = x - (int)Math.sqrt(turningRadius*turningRadius/(1+(1/a1*a1)));
+                turningY = y - (int)((Math.sqrt(turningRadius*turningRadius/(1+(1/a1*a1)))-b)/a);
+                    y = turningY - (int)Math.round(turningRadius *Math.sin(a));
+                if(targetX < x && x > 0)
                 {
-                    xEquals = speed;
+                    x = turningX + (int)Math.round(turningRadius *Math.cos(a));
                 }
-                else if(actuallAngle != 90)
+                else if(targetX > x && x < derby.screenX)
                 {
-                    x -= turningAngle*Math.sin(actuallAngle*2*3.14/360);
-                }
-                if(targetY < y && y > 0)
-                {
-                    y -= turningAngle*Math.cos(actuallAngle*2*3.14/360);
-                }
-                else if(targetY > y && y < derby.screenY)
-                {
-                    y += turningAngle*Math.cos(actuallAngle*2*3.14/360);
+                    x = turningX - (int)Math.round(turningRadius *Math.cos(a));
                 }
             }
-            else if((target.getCurrentY()-b)/Math.tan(actuallAngle*2*3.14/360) == getCurrentX())
+            //else if((target.getCurrentY()-b)/Math.tan(actuallAngle*3.14/180) == getCurrentX())
+            else if((targetX-b)/Math.tan(actuallAngle*3.14/180) == targetY)  // przeciwnik ustawia sie "na lini" f. liniowej
             {
-                // ruch prosto na przeciwnika
-                x += speed;
-                y += Math.tan(actuallAngle*2*3.14/360)*getCurrentX() + b;
+                a = Math.tan(actuallAngle*3.14/180);
+                    x += (int)(a*y + b);
+                    y += (int)Math.sqrt(1 - (Math.pow((a*y + b), 2))); // pitagoras zeby speed byl rowny 1;
             }
-            b = y;*/
+            b = x - (int)a*y; // jak w funkcji liniowej
+            System.out.println("x: " + x + ", y: " + y);
             hitbox.setLocation(x,y);
-            checkCollision();
+            checkCollision();*/
         }
         public void moveToEmptySpace(){
             prevX=x;

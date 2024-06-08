@@ -47,6 +47,7 @@ public class SamochodLaserowy extends Samochod{
     public void rayDamaging(Samochod enemy)
     {
         enemy.sethp(enemy.gethp()-laserDamage);
+        //zmienic na checkDeath(enemy);
         if(enemy.gethp() <= 0)
             enemy.setDead();
     }

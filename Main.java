@@ -1,6 +1,7 @@
 package org.project;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Main{
     public static void main(String[] args) {
@@ -10,15 +11,16 @@ public class Main{
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setTitle("Derby samochodowe");
 
+        EkranGlowny main_menu=new EkranGlowny();
+        window.add(main_menu);
+        window.pack();
+        window.setVisible(true);
+        main_menu.start();
+
         Derby derby =new Derby();
         window.add(derby);
         window.pack();
-        window.setVisible(true);
-        /* EKRAN STARTOWY Z WYBORAMI, POKI CO NIC NIE ROBI
-        EkranGlowny main_menu=new EkranGlowny(window);
-        main_menu.start();
-        window.getContentPane().removeAll();
-        window.repaint(); */
+        //window.setVisible(true);
         derby.setStartingPositions();
         derby.start();
 

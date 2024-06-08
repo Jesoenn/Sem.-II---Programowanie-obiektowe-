@@ -13,6 +13,7 @@
         protected int prevTargetId,targetId; //id samochodu (od 0), id celu, do którego będzie się poruszać
         public boolean collision=false; //przy kolizji zmieniam na true
         protected int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
+        protected double doubleX, doubleY; // do movementu
         protected int waga,speed;
         protected int xMap,yMap; private boolean spaceFound=false;
         protected int hp; // Punkty zycia

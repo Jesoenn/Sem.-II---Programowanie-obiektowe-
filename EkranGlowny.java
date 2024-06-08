@@ -133,6 +133,12 @@ public class EkranGlowny extends JPanel implements ChangeListener {
     }
     public void dalejPressed(){
         if(sliders.size()==4 && (samochody.get(0)!=0 || samochody.get(1)!=0 || samochody.get(2)!=0 || samochody.get(3)!=0)){
+            int suma=0;
+            for(int samochod: samochody){
+                suma+=samochod;
+            }
+            if(suma<2)
+                return;
             etap++;
             for(JSlider slider: sliders){
                 remove(slider);

@@ -427,4 +427,7 @@
         public void setDead(){
             alive=false;
         }
+        public int getCarsAlive(){
+            return carsAlive;
+        }
     }

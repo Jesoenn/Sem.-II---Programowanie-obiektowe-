@@ -14,8 +14,15 @@ import java.util.ArrayList;
 
 public class EkranGlowny extends JPanel implements ChangeListener {
     private Image background_image,samochod,samochodwybuchowy,samochodlaserowy,samochodoponowy,dalejImage,wall,nitro;
+    private int sciany=0,nitra=0,waga=1000;
     private ArrayList<Integer> samochody=new ArrayList<>();
     private ArrayList<JSlider> sliders=new ArrayList<>();
+    /*
+    0 - ZWYKLE
+    1 - WYBUCHOWE
+    2 - LASEROWE
+    3 - OPONOWE
+    */
     private JButton dalej=new JButton();
     private int etap=0;
     EkranGlowny(){
@@ -52,30 +59,43 @@ public class EkranGlowny extends JPanel implements ChangeListener {
         g2d.setFont(new Font("default", Font.BOLD, 30));
         if(etap==0){
             g2d.drawImage(samochod,80,40,100,100,null);
-            g2d.drawString("Zwykle"+samochody.get(0),80,30);
+            g2d.drawString("Zwykle",80,30);
             g2d.drawImage(samochodwybuchowy,470,40,100,100,null);
-            g2d.drawString("Wybuchowe"+samochody.get(1),430,30);
+            g2d.drawString("Wybuchowe",430,30);
             g2d.drawImage(samochodlaserowy,80,350,100,100,null);
-            g2d.drawString("Laserowe"+samochody.get(2),60,340);
+            g2d.drawString("Laserowe",60,340);
             g2d.drawImage(samochodoponowy,470,350,100,100,null);
-            g2d.drawString("Oponowe"+samochody.get(3),450,340);
+            g2d.drawString("Oponowe",450,340);
         }
         else if(etap==1){
             g2d.drawImage(wall,80,40,100,100,null);
-            g2d.drawString("Sciany"+samochody.get(0),80,30);
+            g2d.drawString("Sciany",80,30);
             g2d.drawImage(nitro,470,40,100,100,null);
-            g2d.drawString("Nitra"+samochody.get(1),485,30);
+            g2d.drawString("Nitra",485,30);
         }
-
-        g2d.drawImage(dalejImage,463,564,150,50,null); //165 x 62
+        else if(etap==2){
+            g2d.drawString("Wybierz wage dla wszystkich samochodow",17,40);
+            g2d.drawString("WAGA: "+waga,230,190);
+        }
+        g2d.drawImage(dalejImage,463,564,150,50,null);
     }
     public void start(){
         slidery();
         dalejbutton();
-        while(etap!=2){
-            revalidate();
+        revalidate();
+        while(etap!=3){
             repaint();
         }
+    }
+    private void ustalanieWagi(){
+        for(JSlider slider: sliders){
+            remove(slider);
+        }
+        sliders.clear();
+        addSlider(1000,3000,100);
+        sliders.get(0).setBounds(0,300,650,50);
+        add(sliders.get(0));
+        repaint();
     }
     public void dalejbutton(){
         dalej.setBounds(470,570,150,50);
@@ -88,7 +108,7 @@ public class EkranGlowny extends JPanel implements ChangeListener {
     //Wywolywac dla kazdego przycisku
     public void slidery(){
         for(int i=0; i<4; i++){
-            addSlider(5);
+            addSlider(0,5,1);
         }
         sliders.get(0).setBounds(35,150,200,80);
         sliders.get(1).setBounds(420,150,200,80);
@@ -98,10 +118,13 @@ public class EkranGlowny extends JPanel implements ChangeListener {
             add(slider);
         }
     }
-    private void addSlider(int max){
-        JSlider slider=new JSlider(0,max,0);
+    private void addSlider(int min,int max,int odstepy){
+        int startingValue=0;
+        if(min>0)
+            startingValue=min;
+        JSlider slider=new JSlider(min,max,startingValue);
         slider.setPaintTicks(true);
-        slider.setMajorTickSpacing(1);
+        slider.setMajorTickSpacing(odstepy);
         slider.setPaintLabels(true);
         slider.setForeground(Color.white);
         slider.setOpaque(false);
@@ -115,8 +138,8 @@ public class EkranGlowny extends JPanel implements ChangeListener {
                 remove(slider);
             }
             sliders.clear();
-            addSlider(10);
-            addSlider(15);
+            addSlider(0,10,1);
+            addSlider(0,15,1);
             sliders.get(0).setBounds(35,150,200,80);
             sliders.get(1).setBounds(395,150,250,80);
             for(JSlider slider: sliders){
@@ -126,13 +149,37 @@ public class EkranGlowny extends JPanel implements ChangeListener {
         }
         else if(etap==1){
             etap++;
+            ustalanieWagi();
         }
-
+        else if(etap==2)
+            etap++;
     }
     public void stateChanged(ChangeEvent e) {
-        for(int i=0; i<sliders.size();i++){
-            samochody.set(i,sliders.get(i).getValue());
+        if(etap==0){
+            for(int i=0; i<sliders.size();i++){
+                samochody.set(i,sliders.get(i).getValue());
+            }
+        }
+        else if(etap==1){
+            nitra=sliders.get(1).getValue();
+            sciany=sliders.get(0).getValue();
+        }
+        if(etap==2 && sliders.get(0).getValue()%100!=0){
+            sliders.get(0).setValue(sliders.get(0).getValue()/100*100);
+            waga=sliders.get(0).getValue();
         }
         repaint();
+    }
+    public int getSciany(){
+        return sciany;
+    }
+    public int getNitra(){
+        return nitra;
+    }
+    public ArrayList<Integer> getSamochody(){
+        return samochody;
+    }
+    public int getWaga(){
+        return waga;
     }
 }

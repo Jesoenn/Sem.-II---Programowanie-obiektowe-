@@ -10,26 +10,34 @@ public class Derby extends JPanel {
     private int carsExplosiveAmount=3;
     private int wallsAmount=6; //Tymczasowo ile scian
     private int nitroAmount=10; //Tymczasowo ile nitr - uzytkownik podaje
-    private int carsTirePopersAmount; //liczba wspomnianych rzeczy na mapie, jak wyzej
+    private int carsTirePopersAmount,carsLaserAmount,carsWeight; //liczba wspomnianych rzeczy na mapie, jak wyzej
     public static final int samochodSize=50; //wielkosc samochodu w pixelach
     public static final int screenX=650; //rozmiar ekranu
     public static final int screenY=650;
     public static final int squaresX=screenX/samochodSize; //podzial ekranu na kwadraty -> potrzebne w klasa Mapa
     public static final int squaresY=screenY/samochodSize;
     //Tworzenie obiektow
-    public Mapa map=new Mapa(this); //tymczasowo public
+    public Mapa map; //tymczasowo public
     public ArrayList<Samochod> normalCars=new ArrayList<>(); //tymczasowo public
     public ArrayList<Sciana> walls=new ArrayList<>(); //tymczasowo public
     public ArrayList<Nitro> nitros=new ArrayList<>();
     private Image koniecrozgrywki;
     private boolean simulationFinished=false;
-    private double simulationTime = 10.0; // czas do konca trwania symulacji w sekundach
+    private double simulationTime = 12.0; // czas do konca trwania symulacji w sekundach
     private int minutes=0;
     private int seconds=0;
     //ponizej do testow
     //Samochod samochod1=new Samochod(this,50,50);
     //Samochod samochod2=new Samochod(this,500,500);
-    public Derby(){
+    public Derby(int nitros, int walls,int weight,ArrayList<Integer> cars){
+        nitroAmount=nitros;
+        wallsAmount=walls;
+        carsWeight=weight;
+        carsNormalAmount=cars.get(0);
+        carsExplosiveAmount=cars.get(1);
+        carsLaserAmount=cars.get(2);
+        carsTirePopersAmount=cars.get(3);
+        map=new Mapa(this);
         setPreferredSize(new Dimension(screenX,screenY));
         setDoubleBuffered(true); //rysowanie wszystkiego jednoczesnie na ekranie
         downloadImages();
@@ -118,7 +126,7 @@ public class Derby extends JPanel {
         }
         for(Samochod normalCar: normalCars){
             if(normalCar instanceof SamochodWybuchowy){
-                //jezeli samochod wybuchl, to rysuj wybuch
+                //jezeli samochod wybuchl, to rysuj wybuch przez okreslony czas
                 if(((SamochodWybuchowy) normalCar).getExploded() && ((SamochodWybuchowy) normalCar).getExplosionLength()>0){
                     ((SamochodWybuchowy) normalCar).explosion(g2d);
                 }
@@ -135,7 +143,11 @@ public class Derby extends JPanel {
         //Wyswietlenie czasu na ekranie
         g2d.setColor(Color.white);
         g2d.setFont(new Font("default", Font.BOLD, 40));
-        g2d.drawString(minutes+":"+seconds,screenX/2-38,40);
+        if(seconds>=10)
+            g2d.drawString(minutes+":"+seconds,screenX/2-38,40);
+        else{
+            g2d.drawString(minutes+":0"+seconds,screenX/2-38,40);
+        }
     }
     public void downloadImages(){
         try{

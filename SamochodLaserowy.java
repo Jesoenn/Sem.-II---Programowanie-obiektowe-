@@ -35,7 +35,7 @@ public class SamochodLaserowy extends Samochod{
     public void createRay(){
         //patrze jak skierowany jest samochod, i wystrzeliwuje
         if(facing=="up"){
-            ray=new Rectangle(x+23,0,4,y); // po calej mapie poczawszy od wsp. samochodu //x,y,szer,wys
+            ray=new Rectangle(x+23,0,4,y); // po calej mapie poczawszy od wsp. samochodu x,y,szer,wys
         }
         else if(facing=="down"){
             ray=new Rectangle(x+23,y+50,4,derby.screenY-y+50);
@@ -60,20 +60,22 @@ public class SamochodLaserowy extends Samochod{
     public void rayColoring(Graphics2D g2d)
     {
         g2d.setColor(laserColor);
+        //Co 8 klatek zmiana koloru na losowy
         if(laserDuration%8==0){
             laserColor=new Color(generateNumber.nextInt(256),generateNumber.nextInt(256),generateNumber.nextInt(256));
         }
         g2d.fill(ray);
-        //LOSOWY KOLOR JAK PODZIELNE PRZEZ 3 CZAS POZOSTALY ?
     }
     @Override
     public void update(){
         if(hp>0 && alive){
             timeUntilLaser--;
+            //Stworzenie lasera i zatrzymanie samochodu
             if(timeUntilLaser<=0 && !rayGenerated && !usingNitro){
                 speed=0;
                 createRay();
             }
+            //Wystrzelenie
             if(rayGenerated){
                 rayShooting();
                 laserDuration--;
@@ -120,7 +122,7 @@ public class SamochodLaserowy extends Samochod{
                 rayColoring(g2d);
             }
             g2d.setFont(new Font("default", Font.BOLD, 12));
-            g2d.setColor(Color.red);
+            g2d.setColor(Color.white);
             g2d.drawString("Id: "+carId,x+12,y-2);
         }
     }

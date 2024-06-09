@@ -13,10 +13,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class EkranGlowny extends JPanel implements ChangeListener {
-    private Image background_image,samochod,samochodwybuchowy,samochodlaserowy,samochodoponowy,dalejImage,wall,nitro;
+    private Image samochod,samochodwybuchowy,samochodlaserowy,samochodoponowy,dalejImage,wall,nitro;
     private int sciany=0,nitra=0,waga=1000;
-    private ArrayList<Integer> samochody=new ArrayList<>();
-    private ArrayList<JSlider> sliders=new ArrayList<>();
+    private ArrayList<Integer> samochody=new ArrayList<>(); //Liczba samochodow poszczegolnego rodzaju
+    private ArrayList<JSlider> sliders=new ArrayList<>(); //suwaki
     /*
     0 - ZWYKLE
     1 - WYBUCHOWE
@@ -24,7 +24,7 @@ public class EkranGlowny extends JPanel implements ChangeListener {
     3 - OPONOWE
     */
     private JButton dalej=new JButton();
-    private int etap=0;
+    private int etap=0; //Etap wyboru
     EkranGlowny(){
         setPreferredSize(new Dimension(650,650));
         setLayout(null);
@@ -33,11 +33,11 @@ public class EkranGlowny extends JPanel implements ChangeListener {
                 dalejPressed();
             }
         });
+        //4 rodzaje aut, z kazdego po 0 na razie
         for(int i=0; i<4; i++){
             samochody.add(0);
         }
         try{
-            background_image = ImageIO.read(getClass().getResource("/mapa.png"));
             samochod = ImageIO.read(getClass().getResource("/yellowcar/carYellowUp.png"));
             samochodwybuchowy = ImageIO.read(getClass().getResource("/redcar/carRedUp.png"));
             samochodlaserowy = ImageIO.read(getClass().getResource("/greencar/carGreenUp.png"));
@@ -50,13 +50,13 @@ public class EkranGlowny extends JPanel implements ChangeListener {
         }
 
     }
-    //wyswietlenie tła
     public void paintComponent(Graphics g){
         Graphics2D g2d=(Graphics2D) g;
         super.paintComponent(g);
         g2d.fillRect(0,0,650,650);
         g2d.setColor(Color.white);
         g2d.setFont(new Font("default", Font.BOLD, 30));
+        //Ustawienie samochodow i napisow
         if(etap==0){
             g2d.drawImage(samochod,80,40,100,100,null);
             g2d.drawString("Zwykle",80,30);
@@ -67,16 +67,19 @@ public class EkranGlowny extends JPanel implements ChangeListener {
             g2d.drawImage(samochodoponowy,470,350,100,100,null);
             g2d.drawString("Oponowe",450,340);
         }
+        //Ustawienie, scian, nitr i napisow
         else if(etap==1){
             g2d.drawImage(wall,80,40,100,100,null);
             g2d.drawString("Sciany",80,30);
             g2d.drawImage(nitro,470,40,100,100,null);
             g2d.drawString("Nitra",485,30);
         }
+        //Ustawienie napisow
         else if(etap==2){
             g2d.drawString("Wybierz wage dla wszystkich samochodow",17,40);
             g2d.drawString("WAGA: "+waga,230,190);
         }
+        //prawy dolny rog
         g2d.drawImage(dalejImage,463,564,150,50,null);
     }
     public void start(){
@@ -105,7 +108,7 @@ public class EkranGlowny extends JPanel implements ChangeListener {
         add(dalej);
 
     }
-    //Wywolywac dla kazdego przycisku
+    //Stworzenie 4 suwakow dla kazdego rodzaju auta
     public void slidery(){
         for(int i=0; i<4; i++){
             addSlider(0,5,1);
@@ -118,6 +121,7 @@ public class EkranGlowny extends JPanel implements ChangeListener {
             add(slider);
         }
     }
+    //Suwak z ustawieniami
     private void addSlider(int min,int max,int odstepy){
         int startingValue=0;
         if(min>0)
@@ -131,7 +135,9 @@ public class EkranGlowny extends JPanel implements ChangeListener {
         slider.addChangeListener(this);
         sliders.add(slider);
     }
+    //Przechodzenie do kolejnych etapow wyboru
     public void dalejPressed(){
+        //jezeli 0 etap i wybrane samochody >=2
         if(sliders.size()==4 && (samochody.get(0)!=0 || samochody.get(1)!=0 || samochody.get(2)!=0 || samochody.get(3)!=0)){
             int suma=0;
             for(int samochod: samochody){
@@ -140,10 +146,12 @@ public class EkranGlowny extends JPanel implements ChangeListener {
             if(suma<2)
                 return;
             etap++;
+            //Usuniecie obecnych suwakow z ekranu i listy
             for(JSlider slider: sliders){
                 remove(slider);
             }
             sliders.clear();
+            //2 nowe suwaki dla nitra i sciany
             addSlider(0,10,1);
             addSlider(0,15,1);
             sliders.get(0).setBounds(35,150,200,80);
@@ -153,6 +161,7 @@ public class EkranGlowny extends JPanel implements ChangeListener {
             }
             repaint();
         }
+        //Kolejny etap
         else if(etap==1){
             etap++;
             ustalanieWagi();
@@ -162,15 +171,18 @@ public class EkranGlowny extends JPanel implements ChangeListener {
     }
     public void stateChanged(ChangeEvent e) {
         if(etap==0){
+            //ustawiam liczbe samochodow danego rodzaju na wartosc z suwaka
             for(int i=0; i<sliders.size();i++){
                 samochody.set(i,sliders.get(i).getValue());
             }
         }
         else if(etap==1){
+            //to co dla aut, ale dla nitr i scian
             nitra=sliders.get(1).getValue();
             sciany=sliders.get(0).getValue();
         }
         if(etap==2 && sliders.get(0).getValue()%100!=0){
+            //Zeby wartosc suwaka zmieniala sie o 100, a nie o 1
             sliders.get(0).setValue(sliders.get(0).getValue()/100*100);
             waga=sliders.get(0).getValue();
         }

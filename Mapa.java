@@ -12,6 +12,7 @@ public class Mapa {
         this.derby = derby;
         map=new int[derby.squaresY][derby.squaresX]; // wiersze/kolumny
         downloadImages();
+        //generowanie lokalizacji obiektow na mapie
         generateLocation(derby.getCarsNormalAmount(),3);
         generateLocation(derby.getCarsExplosiveAmount(),4);
         generateLocation(derby.getCarsLaserAmount(),5);
@@ -26,7 +27,7 @@ public class Mapa {
             e.printStackTrace();
         }
     }
-    //Generowanie miejsca na mapie dla wszystkich samochodów i (potem) nitro
+    //Generowanie miejsca na mapie dla wszystkich samochodów i nitr
     private void generateLocation(int amount, int symbol){ //symbol - oznaczenie na mapie
         Random location=new Random();
         int row=location.nextInt(derby.squaresY);
@@ -38,12 +39,6 @@ public class Mapa {
             }
             map[row][column]=symbol;
         }
-//        for(int i=0; i<silnik.squaresY; i++){
-//            for(int j=0; j<silnik.squaresX; j++){
-//                System.out.print(map[i][j]);
-//            }
-//            System.out.println();
-//        }
     }
     private void generateWallsLocation(int amount){
         Random location=new Random();
@@ -76,6 +71,7 @@ public class Mapa {
                     amount++;
                 }
             }
+            //sciana pozioma
             else if(facing==2){
                 //Jezeli jest miejsce kolumne w lewo
                 if(column>0 && column< derby.squaresX-1 && map[row][column-1]==0){
@@ -94,7 +90,7 @@ public class Mapa {
                 }
             }
         }
-        //Wypisanie mapy w konsoli (pozniej moze do plikow)
+        //Wypisanie mapy w konsoli
         for(int i = 0; i< derby.squaresY; i++){
             for(int j = 0; j< derby.squaresX; j++){
                 System.out.print(map[i][j]);

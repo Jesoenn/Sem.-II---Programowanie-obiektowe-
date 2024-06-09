@@ -5,11 +5,10 @@ import java.awt.*;
 import javax.imageio.ImageIO;
 
 public class Nitro {
-    public static final int speedBoost=1;
+    public static final int speedBoost=1; //przyspieszenie speed+=speedBoost
     private static int countNitro = 0;
     private boolean pickedUp=false;
-    private int time=60*2; // ilosc iteracji=fps*sekundy dzialania nitra (dalem nie final static,
-                         // zeby mozna zmniejszac do 0 - nie robic drugiej zmiennej)
+    private int time=60*2; // ilosc iteracji=fps*sekundy dzialania nitra
     private int id,x,y;
     private Image nitro;
     private Derby derby;

@@ -20,11 +20,9 @@ public class Derby extends JPanel {
     private Image koniecrozgrywki;
     private boolean simulationFinished=false;
     private double simulationTime = 15.0; // czas do konca trwania symulacji w sekundach
+    //czas wyswietlany na ekranie
     private int minutes=0;
     private int seconds=0;
-    //ponizej do testow
-    //Samochod samochod1=new Samochod(this,50,50);
-    //Samochod samochod2=new Samochod(this,500,500);
     public Derby(int nitros, int walls,int weight,ArrayList<Integer> cars){
         nitroAmount=nitros;
         wallsAmount=walls;
@@ -38,7 +36,7 @@ public class Derby extends JPanel {
         setDoubleBuffered(true); //rysowanie wszystkiego jednoczesnie na ekranie
         downloadImages();
     }
-    //ustawienie pozycji startowych (na razie dla samochodow zwyklych)
+    //ustawienie pozycji startowych
     public void setStartingPositions(){
         int[][] startingMap=map.getMap();
         //Przejscie przez kazde pole na mapie i stworzenie odpowiednich obiektow
@@ -87,7 +85,7 @@ public class Derby extends JPanel {
             }catch(Exception e){
                 e.printStackTrace();
             }
-            //czas do zakonczenia
+            //czas do zakonczenia, wyswietlane na ekranie
             minutes=(int)simulationTime/60;
             seconds=(int)simulationTime%60;
             gameStateUpdate();
@@ -97,6 +95,7 @@ public class Derby extends JPanel {
         repaint();
     }
     public void gameStateUpdate(){
+        //jezeli zostaly <2 samochody
         if(normalCars.get(0).getCarsAlive()<=1)
             simulationFinished=true;
         for(Samochod normalCar: normalCars){
@@ -104,7 +103,7 @@ public class Derby extends JPanel {
         }
     }
     public void paintComponent(Graphics g){
-        super.paintComponent(g); //jak to dodaje to ekran sie czysci
+        super.paintComponent(g);
         Graphics2D g2d=(Graphics2D) g;
         map.drawMap(g2d);
         for(Nitro nitro: nitros){

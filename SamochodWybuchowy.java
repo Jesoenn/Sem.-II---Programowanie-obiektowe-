@@ -9,7 +9,7 @@ public class SamochodWybuchowy extends Samochod{
     private boolean exploded=false;
     private int explosionLength=60; // dlugosc w klatkach
     private Ellipse2D pole_razenia;
-    private int explodedCars=0; //Do zapisow
+    private int explodedCars=0; //Do zapisow ile samochodow znalazlo sie w wybuchu
     SamochodWybuchowy(Derby derby, int givenX, int givenY,int carsWeight)
     {
         super(derby, givenX, givenY,carsWeight);

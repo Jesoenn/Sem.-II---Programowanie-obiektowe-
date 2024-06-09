@@ -8,34 +8,34 @@
 
     public class Samochod {
         protected static int carCount=0;   //ile samochodow - za tego pomocą ustawienie ich id
-        protected static int carsAlive=0; protected boolean resetPreviousTarget=false;
+        protected static int carsAlive=0;
+        protected boolean resetPreviousTarget=false;
         protected int carId;
         private static int weight;
         protected int prevTargetId,targetId; //id samochodu (od 0), id celu, do którego będzie się poruszać
-        public boolean collision=false; //przy kolizji zmieniam na true
+        //public boolean collision=false; //przy kolizji zmieniam na true
         protected int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
-        protected double doubleX, doubleY; // do movementu
+        //protected double doubleX, doubleY; // do movementu
         protected int speed;
         protected int xMap,yMap; protected boolean spaceFound=false;
         protected int hp; // Punkty zycia
-        protected double turningRadius; // promien skretu
-        protected boolean tires; // stan opon samochodu(narazie tak ze jak raz sie uszkodzi to zmiana na bool'u i potem przy uszkodzeniu nic sie wiecej nie zmienia)
+        //protected double turningRadius; // promien skretu
         protected Image up,right,down,left; //Zdjecia samochodu obroconego w rozne strony
         protected Derby derby;
         protected Random generateNumber=new Random();
         protected Rectangle hitbox;
-        protected int a,b; // wspolczynniki f. liniowej potrzebnej do skrecania i poruszania sie
+        /*protected int a,b; // wspolczynniki f. liniowej potrzebnej do skrecania i poruszania sie
         private int xEquals; // gdy tg(alfa) = pipuł
         private double actuallAngle; // przechowuje kat, pod jakim nachylony jest samochod
         private int turningX, turningY; // punkt wzgledem ktorego skreca
-        protected boolean prevDirection; // info w ktora strone wczesniej samochod skrecal
+        protected boolean prevDirection; // info w ktora strone wczesniej samochod skrecal*/
         protected ArrayList<Samochod> cars;
         protected ArrayList<Sciana> walls;
         protected ArrayList<Nitro> nitros;
         protected boolean usingNitro=false;
         protected Nitro myNitro;
         protected boolean alive=true;
-        protected int iterationsWithoutMoving=0;
+        protected int iterationsWithoutMoving=0; //Jezeli samochod za dlugo stoi to bedzie poruszony
         //uzywane przy uderzeniu z samochodem oponowym
         protected int wheels=4;
         private int tick;
@@ -47,7 +47,6 @@
         private int nitrosTaken=0;
         public Samochod(Derby derby, int givenX, int givenY, int carsWeight){
             this.derby = derby;
-            //tymczasowo, zrobic losowo, zeby nic na siebie nie nachodzilo - najpierw generowana map
             weight=carsWeight;
             hp=weight/10;
             speed=1;
@@ -62,8 +61,6 @@
             turningY = 0;
             turningRadius = 25;
             ;*/
-            
-            //ponizej koncowe, nie zmieniac
             downloadImages();
             prevY=y=givenY;
             prevX=x=givenX;
@@ -96,11 +93,13 @@
                 targetId=carId;
             }
         }
-        //aktualizacja przeciwnika samochodu
+        //aktualizacja samochodu
         public void update(){
+            //Aktualiacja ArrayLista samochodow
             updateCars();
+            //jezeli samochod zywy:
             if(hp>0 && alive){
-                ticksSurvived++; //Do zapisywania przezyte klatki na sekunde
+                ticksSurvived++; //Do zapisywania, przezyte klatki (dzielone przez 60 potem)
                 //Zuzycie nitra
                 if(usingNitro){
                     myNitro.nitroUsage();
@@ -110,12 +109,12 @@
                         myNitro=null;
                     }
                 }
-                //System.out.println("carId: " + carId + ", carsAlive: " + carsAlive + ", spaceFound: " + spaceFound + ", resetPreviousTarget: " + resetPreviousTarget); // DO USUNIECIA
                 //Jezeli samochod utracil opone to pomija skiptick klatek ruchu.
                 if(wheels!=4 && tick!=skiptick){
                     tick++;
                     return;
                 }
+                //Jezeli klatka pominieta, to reset
                 else if(wheels!=4 && tick>=skiptick)
                     tick=0;
                 //Zapobiega utknieciu samochodu w 1 miejscu na dluzej niz sekunde
@@ -123,24 +122,26 @@
                     iterationsWithoutMoving++;
                     //System.out.println(carId+": "+iterationsWithoutMoving);
                 }
-                //ZROBIC ZE JEZELI 2 SAMOCHODY TO JADA DO SIEBIE, POTEM UDERZAJA, JADA NA LOSOWE POLE I ZNOWU DO SIEBIE
+                //Jezeli 2 samochody zywe, i sie zderzyly, to szukanie pustego miejsca
                 if(carsAlive==2 && !spaceFound && resetPreviousTarget){
                     targetId=-1;
                     prevTargetId=carId;
                     findEmptySpaceOnMap(derby.map.getMap());
                     moveToEmptySpace();
                 }
+                //przesuwanie do pustego miejsca
                 else if(carsAlive==2 && spaceFound && resetPreviousTarget){
                     moveToEmptySpace();
                 }
-                //szukam przeciwnika jezeli nie mam
+                //szukanie przeciwnika jezeli nie jest jeszcze wybrany
                 else if(targetId==carId || targetId==prevTargetId){
                     findTarget();
                 }
+                //Po zderzeniu ze sciana szukanie nowego miejsca, lub jak stoi dluzej niz sekunde
                 else if((targetId==-1 && !spaceFound) || iterationsWithoutMoving>=60){
                     iterationsWithoutMoving=0;
                     targetId=-1;
-                    if(carsAlive==2)
+                    if(carsAlive==2) //zeby mogly siebie znowu atakowac 2 samochody
                         prevTargetId=carId;
                     findEmptySpaceOnMap(derby.map.getMap());
                     moveToEmptySpace();
@@ -148,10 +149,12 @@
                 else if(targetId==-1 && spaceFound){
                     moveToEmptySpace();
                 }
+                //Ruch w storne przeciwnika
                 else{
                     movement(cars.get(targetId));
                 }
             }
+            //Jezeli samochod martwy, to hitbox poza ekran
             else{
                 hitbox.setLocation(-100,-100);
             }
@@ -290,6 +293,8 @@
             else if(y<yMap && y<derby.screenY)
                 y+=speed;
             hitbox.setLocation(x,y);
+            //Wystarczy ze blisko pustego miejsca docelowego
+            //(jezeli speed=2, to moze nie dojechac idealnie w pixel)
             if(x<xMap+20 && x>xMap-20){
                 if(y<yMap+20 && y>yMap-20){
                     targetId=carId;
@@ -306,9 +311,10 @@
                 if(hitbox.intersects(car.getHitbox()) && car.getCarId()!=carId){
                     //Zadawanie obrazen
                     damageCar(car);
+                    //Jezeli zderzenie samochodem oponowym, to uszkodzenie opony przeciwnika
                     if(this instanceof SamochodOponowy)
                         ((SamochodOponowy) this).BreakEnemyWheel(car);
-                    //
+                    //Po wjechaniu w przeciwnika cofniecie go do tylu (zeby nie nachodzily na siebie)
                     x=prevX;
                     y=prevY;
                     prevTargetId=targetId;
@@ -318,7 +324,7 @@
                         prevTargetId=targetId;
                     }
                     spaceFound=false; //po zderzeniu ze sciana przerwanie jechania na puste pole
-                    hitbox.setLocation(x, y);
+                    hitbox.setLocation(x, y); //Zmiana lokalizacji hitboxa po cofnieciu
                     findTarget(); //Po zderzeniu zmienia target
                     break;
                 }
@@ -327,7 +333,7 @@
                 if(hitbox.intersects(wall.getHitbox())){
                     x=prevX;
                     y=prevY;
-                    hitbox.setLocation(x, y);
+                    hitbox.setLocation(x, y); //cofniecie hitboxa
                     targetId=-1; //po zderzeniu jedzie na losowe pole
                     spaceFound=false;
                     if(carsAlive==2)
@@ -335,6 +341,7 @@
                     break;
                 }
             }
+            //Jezeli jeszcze nie uzywa nitra
             if(!usingNitro){
                 for(Nitro nitro: nitros){
                     if(hitbox.intersects(nitro.getHitbox())){
@@ -359,7 +366,7 @@
             yMap=newY*derby.samochodSize;
             spaceFound=true;
         }
-        //W kazdej chwili mozna zmienic
+        //Zadawanie obrazen
         public void damageCar(Samochod enemy){
             int damage=0;
             if(speed>enemy.getSpeed())
@@ -369,7 +376,7 @@
             else if(speed==enemy.getSpeed())
                 damage=20; //TYMCZASOWO ZEBY SZYBKO UMARL
             enemy.sethp(enemy.gethp()-damage);
-            //Usmiercenie samochodu
+            //Sprawdzenie czy przeciwnik zabity
             checkDeath(enemy);
         }
         public void checkDeath(Samochod enemy){
@@ -377,6 +384,7 @@
                 enemy.setDead();
                 carsAlive--;
                 killCount++; //do zapisywania
+                //Jezeli przeciwnik byl samochodem wybuchowym, to eksplozja
                 if(enemy instanceof SamochodWybuchowy){
                     ((SamochodWybuchowy) enemy).Eksplozja();
                 }
@@ -398,7 +406,7 @@
                     g2d.drawImage(up,x,y, derby.samochodSize, derby.samochodSize,null);
                 }
                 g2d.setFont(new Font("default", Font.BOLD, 12));
-                g2d.setColor(Color.red);
+                g2d.setColor(Color.white);
                 g2d.drawString("Id: "+carId,x+12,y-2);
             }
         }
@@ -407,9 +415,6 @@
         }
         public void updateNitros(){
             nitros=derby.nitros;
-        }
-        protected double calculateDistance(int x1, int y1, int x2, int y2) {
-            return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
         }
         public void setSpeed(int speed){
             this.speed=speed;
@@ -447,7 +452,7 @@
         public void setDead(){
             hitbox.setLocation(-100,-100);
             alive=false;
-            rank=carsAlive; //
+            rank=carsAlive; //Do rankingu
         }
         public int getCarsAlive(){
             return carsAlive;

@@ -5,11 +5,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 public class Zapis {
-    ArrayList<Samochod> cars;
-    String mainPath="src/main/java/org/project/dane/";
-    String path;
-    FileWriter rankings;
-    FileWriter writer;
+    private ArrayList<Samochod> cars;
+    private String mainPath="src/main/java/org/project/dane/";
+    private String path;
+    private FileWriter rankings;
+    private FileWriter writer;
     public Zapis(Derby derby){
         cars=derby.normalCars;
     }
@@ -42,6 +42,7 @@ public class Zapis {
     public int getAverageRanking(int index){
         int averageRanking=0;
         int howMany=0;
+        //1 - zwykly, 2-wybuch, 3-laser, 4-opon
         for(Samochod car: cars){
             if(index==1){
                 if(!(car instanceof SamochodWybuchowy) && !(car instanceof SamochodLaserowy) && !(car instanceof SamochodOponowy)){

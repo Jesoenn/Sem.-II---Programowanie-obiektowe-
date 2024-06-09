@@ -24,7 +24,6 @@
         protected Derby derby;
         protected Random generateNumber=new Random();
         protected Rectangle hitbox;
-        private int killCount; // ile samochodow pokonal dany samochod
         protected int a,b; // wspolczynniki f. liniowej potrzebnej do skrecania i poruszania sie
         private int xEquals; // gdy tg(alfa) = pipuł
         private double actuallAngle; // przechowuje kat, pod jakim nachylony jest samochod
@@ -41,6 +40,11 @@
         protected int wheels=4;
         private int tick;
         protected int skiptick=0;
+        //Do zapisywania - wykresy, itp
+        private int killCount=0;
+        private int ticksSurvived=0;
+        private int rank=1; //bazowo 1 miejsce
+        private int nitrosTaken=0;
         public Samochod(Derby derby, int givenX, int givenY, int carsWeight){
             this.derby = derby;
             //tymczasowo, zrobic losowo, zeby nic na siebie nie nachodzilo - najpierw generowana map
@@ -96,6 +100,7 @@
         public void update(){
             updateCars();
             if(hp>0 && alive){
+                ticksSurvived++; //Do zapisywania przezyte klatki na sekunde
                 //Zuzycie nitra
                 if(usingNitro){
                     myNitro.nitroUsage();
@@ -333,6 +338,7 @@
             if(!usingNitro){
                 for(Nitro nitro: nitros){
                     if(hitbox.intersects(nitro.getHitbox())){
+                        nitrosTaken++; //do zapisow
                         myNitro=nitro;
                         usingNitro=true;
                         nitro.takeNitro();
@@ -369,6 +375,7 @@
         public void checkDeath(Samochod enemy){
             if(enemy.gethp()<=0 && enemy.isAlive()){
                 enemy.setDead();
+                killCount++; //do zapisywania
                 if(enemy instanceof SamochodWybuchowy){
                     ((SamochodWybuchowy) enemy).Eksplozja();
                 }
@@ -439,6 +446,7 @@
         }
         public void setDead(){
             alive=false;
+            rank=carsAlive; //
         }
         public int getCarsAlive(){
             return carsAlive;

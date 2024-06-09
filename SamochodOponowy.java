@@ -4,7 +4,7 @@ import javax.imageio.ImageIO;
 
 public class SamochodOponowy extends Samochod{
     private int tireRepairCooldown=60*2; //Opona tego auta naprawia sie po 2 sekundach
-
+    private int damagedTires=0; //Do zapisow
     SamochodOponowy(Derby derby, int givenX, int givenY, int carsWeight)
     {
         super(derby, givenX, givenY,carsWeight);
@@ -36,6 +36,7 @@ public class SamochodOponowy extends Samochod{
     }
     public void BreakEnemyWheel(Samochod enemy)
     {
+        damagedTires++; //do zapisow
         enemy.damageWheel();
     }
 }

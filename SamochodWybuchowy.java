@@ -9,6 +9,7 @@ public class SamochodWybuchowy extends Samochod{
     private boolean exploded=false;
     private int explosionLength=60; // dlugosc w klatkach
     private Ellipse2D pole_razenia;
+    private int explodedCars=0; //Do zapisow
     SamochodWybuchowy(Derby derby, int givenX, int givenY,int carsWeight)
     {
         super(derby, givenX, givenY,carsWeight);
@@ -31,6 +32,7 @@ public class SamochodWybuchowy extends Samochod{
         pole_razenia=new Ellipse2D.Double(x+derby.samochodSize/2-promien_obrazen,y+derby.samochodSize/2-promien_obrazen,promien_obrazen*2,promien_obrazen*2);
         for(Samochod car: cars){
             if(pole_razenia.intersects(car.getHitbox()) && car.getCarId()!=carId){
+                explodedCars++;
                 car.sethp(car.gethp()-30);
                 checkDeath(car);
             }

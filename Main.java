@@ -25,5 +25,8 @@ public class Main{
         derby.setStartingPositions();
         derby.start();
 
+        Zapis zapis=new Zapis(derby);
+        zapis.startSaving();
+
     }
 }

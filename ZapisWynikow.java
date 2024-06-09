@@ -32,15 +32,35 @@ public class ZapisWynikow {
         ChartPanel chartPanel2 = new ChartPanel(others);
         chartPanel2.setPreferredSize(new Dimension(400, 400));
     }
-  public void savingDataToFile(String fileName)
-  {
-        try(BufferedWriter save = new BufferedWriter(new FileWriter(fileName, true)))
+    public DefaultCategoryDataset readFile(File file)
+    {
+        try
         {
-            save.write("Dane: Samochod, SamochodWybuchowy, SamochodOponowy, SamochodLaserowy, Nitro, Sciana");
+            file = new File(fileName);
+            reader = new Scanner(file);
+            Integer lenght = 0;
+            while(reader.hasNextLine())
+            {
+                String line = reader.nextLine();
+                ArrayList<Integer> fileData = new ArrayList<Integer>();
+                for(int i = 0; i < line.length(); i++) {
+                    if(line.charAt(i) != ';')
+                    {
+                        fileData.add((int)line.charAt(i));
+                    }
+                    lenght++;
+                }
+                while(lenght > 0) {
+                    dataset1.addValue(fileData.get(lenght), "Cars", lenght.toString());
+                    lenght--;
+                }
+            }
+            return dataset1;
         }
-        catch(IOException e)
+        catch(FileNotFoundException e)
         {
             e.printStackTrace();
         }
+        return dataset1;
     }
 }

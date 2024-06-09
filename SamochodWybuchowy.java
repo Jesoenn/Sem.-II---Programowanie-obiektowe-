@@ -49,4 +49,7 @@ public class SamochodWybuchowy extends Samochod{
     public int getExplosionLength(){
         return explosionLength;
     }
+    public int getExplodedCars(){
+        return explodedCars;
+    }
 }

@@ -98,6 +98,12 @@ public class Derby extends JPanel {
             repaint();
         }
         simulationFinished=true;
+
+        //sprawdzenie rankingu
+        for(Samochod car: normalCars){
+            System.out.print(car.getRank()+",");
+        }
+
         repaint();
     }
     //zaktualiziowanie obecnego stanu rozgrywki

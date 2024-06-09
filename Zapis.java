@@ -80,7 +80,7 @@ public class Zapis {
         try {
             writer=new FileWriter(path,true);
             if(createdFile){
-                writer.write(endPath+"Id;Time Survived;Rank;Used Nitros;");
+                writer.write(endPath+"Id;Time Survived;Kills;Rank;Used Nitros;");
                 if(endPath.equals("explosiveCar"))
                     writer.write("Cars Exploded;");
                 else if(endPath.equals("tirePopperCar"))
@@ -90,21 +90,21 @@ public class Zapis {
             for(Samochod car: cars){
                 if(endPath.equals("normalCar") && !(car instanceof SamochodWybuchowy) && !(car instanceof SamochodLaserowy) && !(car instanceof SamochodOponowy)){
                     writer.write(car.getCarId()+";"+car.getTicksSurvived()/60+";"
-                            +car.getRank()+";"+car.getNitrosTaken()+";\n");
+                            +car.getKillCount()+";"+car.getRank()+";"+car.getNitrosTaken()+";\n");
                 }
                 if(endPath.equals("explosiveCar") && car instanceof SamochodWybuchowy){
                     writer.write(car.getCarId()+";"+car.getTicksSurvived()/60+";"
-                            +car.getRank()+";"+car.getNitrosTaken()+";");
+                            +car.getKillCount()+";"+car.getRank()+";"+car.getNitrosTaken()+";");
                     writer.write(((SamochodWybuchowy) car).getExplodedCars()+";\n");
                 }
                 else if(endPath.equals("tirePopperCar") && car instanceof SamochodOponowy){
                     writer.write(car.getCarId()+";"+car.getTicksSurvived()/60+";"
-                            +car.getRank()+";"+car.getNitrosTaken()+";");
+                            +car.getKillCount()+";"+car.getRank()+";"+car.getNitrosTaken()+";");
                     writer.write(((SamochodOponowy) car).getDamagedTires()+";\n");
                 }
                 else if(endPath.equals("laserCar") && car instanceof SamochodLaserowy){
                     writer.write(car.getCarId()+";"+car.getTicksSurvived()/60+";"
-                            +car.getRank()+";"+car.getNitrosTaken()+";\n");
+                            +car.getKillCount()+";"+car.getRank()+";"+car.getNitrosTaken()+";\n");
                 }
             }
             writer.close();

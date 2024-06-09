@@ -39,4 +39,7 @@ public class SamochodOponowy extends Samochod{
         damagedTires++; //do zapisow
         enemy.damageWheel();
     }
+    public int getDamagedTires(){
+        return damagedTires;
+    }
 }

@@ -9,9 +9,9 @@ public class SamochodWybuchowy extends Samochod{
     private boolean exploded=false;
     private int explosionLength=60; // dlugosc w klatkach
     private Ellipse2D pole_razenia;
-    SamochodWybuchowy(Derby derby, int givenX, int givenY)
+    SamochodWybuchowy(Derby derby, int givenX, int givenY,int carsWeight)
     {
-        super(derby, givenX, givenY);
+        super(derby, givenX, givenY,carsWeight);
     }
     @Override
     public void downloadImages(){

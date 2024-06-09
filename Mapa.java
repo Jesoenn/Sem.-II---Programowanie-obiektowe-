@@ -14,7 +14,9 @@ public class Mapa {
         downloadImages();
         generateLocation(derby.getCarsNormalAmount(),3);
         generateLocation(derby.getCarsExplosiveAmount(),4);
+        generateLocation(derby.getCarsLaserAmount(),5);
         generateLocation(derby.getNitroAmount(),6);
+        generateLocation(derby.getCarsTirePopersAmount(),7);
         generateWallsLocation(derby.getWallsAmount());
     }
     private void downloadImages(){

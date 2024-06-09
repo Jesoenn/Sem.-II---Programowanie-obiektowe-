@@ -16,9 +16,9 @@ public class SamochodLaserowy extends Samochod{
     private boolean rayGenerated=false;
     private int timeUntilLaser;
     private int laserDuration=2*60;
-    public SamochodLaserowy(Derby derby, int givenX, int givenY)
+    public SamochodLaserowy(Derby derby, int givenX, int givenY,int carsWeight)
     {
-        super(derby, givenX, givenY);
+        super(derby, givenX, givenY,carsWeight);
         laserDamage=2;
         timeUntilLaser=(generateNumber.nextInt(3)+2)*60; //Od 3 do 5sekund razy klatki na sekunde
     }

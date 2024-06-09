@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Derby extends JPanel {
     private int carsNormalAmount=6; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGLOWNY
-    private int carsExplosiveAmount=3;
+    private int carsExplosiveAmount=3; //Tymczasowo ile eksplodujacych
     private int wallsAmount=6; //Tymczasowo ile scian
     private int nitroAmount=10; //Tymczasowo ile nitr - uzytkownik podaje
     private int carsTirePopersAmount,carsLaserAmount,carsWeight; //liczba wspomnianych rzeczy na mapie, jak wyzej
@@ -49,10 +49,16 @@ public class Derby extends JPanel {
         for(int i=0; i<squaresY; i++){
             for(int j=0; j<squaresX; j++){
                 if(startingMap[i][j]==3){
-                    normalCars.add(new Samochod(this,j*samochodSize,i*samochodSize));
+                    normalCars.add(new Samochod(this,j*samochodSize,i*samochodSize,carsWeight));
                 }
                 else if(startingMap[i][j]==4){
-                    normalCars.add(new SamochodWybuchowy(this,j*samochodSize,i*samochodSize));
+                    normalCars.add(new SamochodWybuchowy(this,j*samochodSize,i*samochodSize,carsWeight));
+                }
+                else if(startingMap[i][j]==5){
+                    normalCars.add(new SamochodLaserowy(this,j*samochodSize,i*samochodSize,carsWeight));
+                }
+                else if(startingMap[i][j]==7){
+                    normalCars.add(new SamochodOponowy(this,j*samochodSize,i*samochodSize,carsWeight));
                 }
                 else if(startingMap[i][j]==1){
                     walls.add(new Sciana(this,j*samochodSize,i*samochodSize,"vertical"));
@@ -165,7 +171,13 @@ public class Derby extends JPanel {
     public int getCarsExplosiveAmount(){
         return carsExplosiveAmount;
     }
-    public int getNitroAmount(){
+    public int getNitroAmount() {
         return nitroAmount;
+    }
+    public int getCarsLaserAmount(){
+        return carsLaserAmount;
+    }
+    public int getCarsTirePopersAmount(){
+        return carsTirePopersAmount;
     }
 }

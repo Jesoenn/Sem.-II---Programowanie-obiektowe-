@@ -10,12 +10,13 @@
         protected static int carCount=0;   //ile samochodow - za tego pomocą ustawienie ich id
         protected static int carsAlive=0; protected boolean resetPreviousTarget=false;
         protected int carId;
+        private static int weight;
         protected int prevTargetId,targetId; //id samochodu (od 0), id celu, do którego będzie się poruszać
         public boolean collision=false; //przy kolizji zmieniam na true
         protected int x,y,prevX,prevY; //Polozenie samochodu obecne i polozenie w poprzedniej klatce
         protected double doubleX, doubleY; // do movementu
-        protected int waga,speed;
-        protected int xMap,yMap; private boolean spaceFound=false;
+        protected int speed;
+        protected int xMap,yMap; protected boolean spaceFound=false;
         protected int hp; // Punkty zycia
         protected double turningRadius; // promien skretu
         protected boolean tires; // stan opon samochodu(narazie tak ze jak raz sie uszkodzi to zmiana na bool'u i potem przy uszkodzeniu nic sie wiecej nie zmienia)
@@ -24,7 +25,7 @@
         protected Random generateNumber=new Random();
         protected Rectangle hitbox;
         private int killCount; // ile samochodow pokonal dany samochod
-        private int a,b; // wspolczynniki f. liniowej potrzebnej do skrecania i poruszania sie
+        protected int a,b; // wspolczynniki f. liniowej potrzebnej do skrecania i poruszania sie
         private int xEquals; // gdy tg(alfa) = pipuł
         private double actuallAngle; // przechowuje kat, pod jakim nachylony jest samochod
         private int turningX, turningY; // punkt wzgledem ktorego skreca
@@ -36,10 +37,11 @@
         protected Nitro myNitro;
         protected boolean alive=true;
         protected int iterationsWithoutMoving=0;
-        public Samochod(Derby derby, int givenX, int givenY){
+        public Samochod(Derby derby, int givenX, int givenY, int carsWeight){
             this.derby = derby;
             //tymczasowo, zrobic losowo, zeby nic na siebie nie nachodzilo - najpierw generowana map
-            waga=1500;
+            weight=carsWeight;
+            hp=weight/10;
             speed=1;
             carsAlive++;
             // do skrecania ponizej:
@@ -62,7 +64,6 @@
             carCount++;
             targetId=carId;
             prevTargetId=carId;
-            hp=100;
         }
         public void downloadImages(){ //Byc moze zmienic zdjecia dla klas pochodnych - inne kolory aut
             try{
@@ -90,7 +91,7 @@
         //aktualizacja przeciwnika samochodu
         public void update(){
             updateCars();
-            if(hp>0){
+            if(hp>0 && alive){
                 //Zuzycie nitra
                 if(usingNitro){
                     myNitro.nitroUsage();
@@ -100,7 +101,7 @@
                         myNitro=null;
                     }
                 }
-                System.out.println("carId: " + carId + ", carsAlive: " + carsAlive + ", spaceFound: " + spaceFound + ", resetPreviousTarget: " + resetPreviousTarget); // DO USUNIECIA
+                //System.out.println("carId: " + carId + ", carsAlive: " + carsAlive + ", spaceFound: " + spaceFound + ", resetPreviousTarget: " + resetPreviousTarget); // DO USUNIECIA
                 //Zapobiega utknieciu samochodu w 1 miejscu na dluzej niz sekunde
                 if(x==prevX && y==prevY){
                     iterationsWithoutMoving++;
@@ -429,5 +430,8 @@
         }
         public int getCarsAlive(){
             return carsAlive;
+        }
+        public void setWeight(int weight){
+            this.weight=weight;
         }
     }

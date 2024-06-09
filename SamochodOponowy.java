@@ -1,12 +1,10 @@
 package org.project;
 
-import java.awt.geom.Ellipse2D;
-
 public class SamochodOponowy extends Samochod{
 
-    SamochodOponowy(Derby derby, int givenX, int givenY)
+    SamochodOponowy(Derby derby, int givenX, int givenY, int carsWeight)
     {
-        super(derby, givenX, givenY);
+        super(derby, givenX, givenY,carsWeight);
     }
     public void BreakEnemyWhell()
     {

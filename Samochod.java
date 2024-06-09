@@ -37,6 +37,10 @@
         protected Nitro myNitro;
         protected boolean alive=true;
         protected int iterationsWithoutMoving=0;
+        //uzywane przy uderzeniu z samochodem oponowym
+        protected int wheels=4;
+        private int tick;
+        protected int skiptick=0;
         public Samochod(Derby derby, int givenX, int givenY, int carsWeight){
             this.derby = derby;
             //tymczasowo, zrobic losowo, zeby nic na siebie nie nachodzilo - najpierw generowana map
@@ -102,6 +106,13 @@
                     }
                 }
                 //System.out.println("carId: " + carId + ", carsAlive: " + carsAlive + ", spaceFound: " + spaceFound + ", resetPreviousTarget: " + resetPreviousTarget); // DO USUNIECIA
+                //Jezeli samochod utracil opone to pomija skiptick klatek ruchu.
+                if(wheels!=4 && tick!=skiptick){
+                    tick++;
+                    return;
+                }
+                else if(wheels!=4 && tick>=skiptick)
+                    tick=0;
                 //Zapobiega utknieciu samochodu w 1 miejscu na dluzej niz sekunde
                 if(x==prevX && y==prevY){
                     iterationsWithoutMoving++;
@@ -290,7 +301,8 @@
                 if(hitbox.intersects(car.getHitbox()) && car.getCarId()!=carId){
                     //Zadawanie obrazen
                     damageCar(car);
-
+                    if(this instanceof SamochodOponowy)
+                        ((SamochodOponowy) this).BreakEnemyWheel(car);
                     //
                     x=prevX;
                     y=prevY;
@@ -433,5 +445,12 @@
         }
         public void setWeight(int weight){
             this.weight=weight;
+        }
+        public void damageWheel(){
+            if(wheels>1){
+                wheels--;
+                skiptick++;
+                tick=0;
+            }
         }
     }

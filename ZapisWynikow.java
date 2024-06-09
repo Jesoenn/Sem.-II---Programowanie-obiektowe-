@@ -18,15 +18,15 @@ public class ZapisWynikow {
     // ponizej wykresy na rozne rzeczy (do wymyslenia wszystkich mozliwosci)
     private JFreeChart timeDependencies; // wpływ parametrów wejściowych na czas trwania symulacji
     private JFreeChart others;
-    private DefaultCategoryDataset dataset1; 
+    private DefaultCategoryDataset timeDepDataSet; 
     private DefaultCategoryDataset dataset2;
 
       public ZapisWynikow(JFreeChart wykres)
     {
-        dataset1 = new DefaultCategoryDataset();
-        chart1 = ChartFactory.createLineChart();
+        timeDepDataSet = new DefaultCategoryDataset();
+        timeDependencies = ChartFactory.createLineChart("time Dependencies: ", "sth", "time", dataset1, PlotOrientation.VERTICAL, true, true, false );
         dataset2 = new DefaultCategoryDataset();
-        chart2 = ChartFactory.createLineChart();
+        others = ChartFactory.createLineChart();
         ChartPanel chartPanel1 = new ChartPanel(timeDependencies);
         chartPanel1.setPreferredSize(new Dimension(400, 400));
         ChartPanel chartPanel2 = new ChartPanel(others);

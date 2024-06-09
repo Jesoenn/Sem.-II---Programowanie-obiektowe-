@@ -11,7 +11,6 @@ public class SamochodLaserowy extends Samochod{
     private Color laserColor=Color.green;
     private static int laserDamage;
     private String facing="up";
-    //private Line2D ray;
     private Rectangle ray;
     private boolean rayGenerated=false;
     private int timeUntilLaser;
@@ -20,7 +19,7 @@ public class SamochodLaserowy extends Samochod{
     {
         super(derby, givenX, givenY,carsWeight);
         laserDamage=2;
-        timeUntilLaser=(generateNumber.nextInt(3)+2)*60; //Od 3 do 5sekund razy klatki na sekunde
+        timeUntilLaser=(generateNumber.nextInt(3)+2)*60; //Od 2 do 4 sekund razy klatki na sekunde
     }
   @Override
     public void downloadImages(){
@@ -120,8 +119,9 @@ public class SamochodLaserowy extends Samochod{
             if(rayGenerated){
                 rayColoring(g2d);
             }
+            g2d.setFont(new Font("default", Font.BOLD, 12));
+            g2d.setColor(Color.red);
+            g2d.drawString("Id: "+carId,x+12,y-2);
         }
-        g2d.setColor(Color.red);
-        g2d.drawString(hp+" id:"+carId,x,y);
     }
 }

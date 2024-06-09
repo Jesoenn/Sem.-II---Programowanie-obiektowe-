@@ -4,7 +4,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 
 public class Sciana {
-    private static int countSciany=1;
+    private static int countSciany=1; //TYMCZASOWE PUBLIC
     private int id;
     private Derby derby;
     private Image wallHorizontal,wallVertical;

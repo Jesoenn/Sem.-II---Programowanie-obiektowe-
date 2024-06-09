@@ -121,7 +121,7 @@
                 //Zapobiega utknieciu samochodu w 1 miejscu na dluzej niz sekunde
                 if(x==prevX && y==prevY){
                     iterationsWithoutMoving++;
-                    System.out.println(carId+": "+iterationsWithoutMoving);
+                    //System.out.println(carId+": "+iterationsWithoutMoving);
                 }
                 //ZROBIC ZE JEZELI 2 SAMOCHODY TO JADA DO SIEBIE, POTEM UDERZAJA, JADA NA LOSOWE POLE I ZNOWU DO SIEBIE
                 if(carsAlive==2 && !spaceFound && resetPreviousTarget){
@@ -173,8 +173,8 @@
 
             
             // do f. linowych:
-            double a1 = 0; // wsp. kierunkowy f. liniowej prostopadlej do f. liniowej ruchu samochodu
-            int b1 = 0; // rowniez parametr f. liniowej _|_
+            //double a1 = 0; // wsp. kierunkowy f. liniowej prostopadlej do f. liniowej ruchu samochodu
+            //int b1 = 0; // rowniez parametr f. liniowej _|_
             //    PONIZEJ BUGOWATE SKRECANIE(JUZ DZIALA LEPIEJ ALE STILL DO DOROBIENIA)
             // Note: przyjalem uklad wspolrzednych taki ze x to y, a y to x(na przykladzie f. liniowej: x = ay+b zamiast y = ax+b (tzn wykonalem obrot mapy o 90 stopni, bo tak sie ukladaja wspolrzedne mapy))
             /*if((targetX-b)/Math.tan(actuallAngle*3.14/180) < targetY) // jesli przeciwnik jest na lewo
@@ -367,7 +367,7 @@
             else if(speed<enemy.getSpeed())
                 damage=(enemy.getSpeed()-speed)*10;
             else if(speed==enemy.getSpeed())
-                damage=25; //TYMCZASOWO ZEBY SZYBKO UMARL
+                damage=20; //TYMCZASOWO ZEBY SZYBKO UMARL
             enemy.sethp(enemy.gethp()-damage);
             //Usmiercenie samochodu
             checkDeath(enemy);
@@ -375,11 +375,11 @@
         public void checkDeath(Samochod enemy){
             if(enemy.gethp()<=0 && enemy.isAlive()){
                 enemy.setDead();
+                carsAlive--;
                 killCount++; //do zapisywania
                 if(enemy instanceof SamochodWybuchowy){
                     ((SamochodWybuchowy) enemy).Eksplozja();
                 }
-                carsAlive--;
                 System.out.println("Samochodow w symulacji: "+carsAlive);
             }
         }
@@ -397,10 +397,10 @@
                 else if(prevX==x && prevY==y){
                     g2d.drawImage(up,x,y, derby.samochodSize, derby.samochodSize,null);
                 }
+                g2d.setFont(new Font("default", Font.BOLD, 12));
+                g2d.setColor(Color.red);
+                g2d.drawString("Id: "+carId,x+12,y-2);
             }
-            g2d.setColor(Color.red);
-            g2d.drawString(String.valueOf(hp)+" id:"+carId,x,y);
-            //POTEM WRZUCIC 2 LINIJKI PONIZEJ DO IFA
         }
         public void updateCars(){
             cars=derby.normalCars;
@@ -441,22 +441,11 @@
         public void sethp(int hp){
             this.hp=hp;
         }
-        public int getKillCount(){
-            return killCount;
-        }
-        public int getTickssurvived(){
-            return ticksSurvived;
-        }
         public boolean isAlive(){
             return alive;
         }
-        public int getRank(){
-            return rank;
-        }
-        public int getNitrosTaken(){
-            return nitrosTaken;
-        }
         public void setDead(){
+            hitbox.setLocation(-100,-100);
             alive=false;
             rank=carsAlive; //
         }
@@ -472,5 +461,17 @@
                 skiptick++;
                 tick=0;
             }
+        }
+        public int getRank(){
+            return rank;
+        }
+        public int getKillCount(){
+            return killCount;
+        }
+        public int getTicksSurvived(){
+            return ticksSurvived;
+        }
+        public int getNitrosTaken(){
+            return nitrosTaken;
         }
     }

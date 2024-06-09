@@ -2,6 +2,7 @@ package org.project;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Main{
     public static void main(String[] args) {
@@ -16,17 +17,39 @@ public class Main{
         window.pack();
         window.setVisible(true);
         main_menu.start();
-
         window.remove(main_menu);
         Derby derby =new Derby(main_menu.getNitra(),main_menu.getSciany(),main_menu.getWaga(),main_menu.getSamochody());
         window.add(derby);
         window.pack();
-        //window.setVisible(true);
         derby.setStartingPositions();
         derby.start();
-
         Zapis zapis=new Zapis(derby);
         zapis.startSaving();
 
+        /*ArrayList<Integer> samochody;
+        Derby derby;
+        Zapis zapis;
+        for(int l=0; l<100; l++){
+            System.out.println("POWTORZENIE SYMULACJI: "+(l+1));
+            samochody=new ArrayList<>();
+            samochody.add(3);
+            samochody.add(3);
+            samochody.add(3);
+            samochody.add(3);
+            derby=new Derby(10,5,1000,samochody);
+            window.add(derby);
+            window.pack();
+            window.setVisible(true);
+            derby.setStartingPositions();
+            derby.start();
+            zapis=new Zapis(derby);
+            zapis.startSaving();
+
+            derby.normalCars.get(0).carCount=0;
+            derby.nitros.get(0).countNitro=0;
+            derby.walls.get(0).countSciany=0;
+            derby.normalCars.get(0).carsAlive=0;
+            window.remove(derby);
+        }*/
     }
 }

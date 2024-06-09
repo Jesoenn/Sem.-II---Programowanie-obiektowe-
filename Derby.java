@@ -6,11 +6,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Derby extends JPanel {
-    private int carsNormalAmount=6; //TYMCZASOWO ILE SAMOCHODOW, BEDZIE TO LICZONE W EKANGLOWNY
-    private int carsExplosiveAmount=3; //Tymczasowo ile eksplodujacych
-    private int wallsAmount=6; //Tymczasowo ile scian
-    private int nitroAmount=10; //Tymczasowo ile nitr - uzytkownik podaje
-    private int carsTirePopersAmount,carsLaserAmount,carsWeight; //liczba wspomnianych rzeczy na mapie, jak wyzej
+    private int nitroAmount,wallsAmount,carsNormalAmount,carsExplosiveAmount,carsTirePopersAmount,carsLaserAmount,carsWeight; //liczba wspomnianych rzeczy na mapie, jak wyzej
     public static final int samochodSize=50; //wielkosc samochodu w pixelach
     public static final int screenX=650; //rozmiar ekranu
     public static final int screenY=650;
@@ -23,7 +19,7 @@ public class Derby extends JPanel {
     public ArrayList<Nitro> nitros=new ArrayList<>();
     private Image koniecrozgrywki;
     private boolean simulationFinished=false;
-    private double simulationTime = 12.0; // czas do konca trwania symulacji w sekundach
+    private double simulationTime = 15.0; // czas do konca trwania symulacji w sekundach
     private int minutes=0;
     private int seconds=0;
     //ponizej do testow
@@ -98,30 +94,8 @@ public class Derby extends JPanel {
             repaint();
         }
         simulationFinished=true;
-
-        //sprawdzenie rankingu
-        for(Samochod car: normalCars){
-            System.out.print(car.getRank()+",");
-        }
-
         repaint();
     }
-    //zaktualiziowanie obecnego stanu rozgrywki
-    /*public void gameStateUpdate(){
-        Samochod targetCar;
-        for(Samochod normalCar: normalCars){
-            if(normalCar.getCarId()==normalCar.getTargetId()){
-                normalCar.findTarget();
-            }
-            targetCar=normalCars.get(normalCar.getTargetId());
-            normalCar.movement(targetCar.getCurrentX(), targetCar.getCurrentY());
-            for(Sciana wall: walls){
-                if(normalCar.getHitbox().intersects(wall.getHitbox())){
-                    normalCar.setSpeed(0);
-                }
-            }
-        }
-    }*/
     public void gameStateUpdate(){
         if(normalCars.get(0).getCarsAlive()<=1)
             simulationFinished=true;

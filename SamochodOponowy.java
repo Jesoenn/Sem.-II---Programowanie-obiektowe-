@@ -36,8 +36,10 @@ public class SamochodOponowy extends Samochod{
     }
     public void BreakEnemyWheel(Samochod enemy)
     {
-        damagedTires++; //do zapisow
-        enemy.damageWheel();
+        if(enemy.wheels>0) {
+            damagedTires++; //do zapisow
+            enemy.damageWheel();
+        }
     }
     public int getDamagedTires(){
         return damagedTires;

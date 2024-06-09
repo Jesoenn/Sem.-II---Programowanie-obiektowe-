@@ -8,12 +8,19 @@ import java.util.Map;
 import java.util.Random;
 import java.lang.Math;
 public class SamochodLaserowy extends Samochod{
-    private int laserDamage;
-    private Line2D ray;
+    private Color laserColor=Color.green;
+    private static int laserDamage;
+    private String facing="up";
+    //private Line2D ray;
+    private Rectangle ray;
+    private boolean rayGenerated=false;
+    private int timeUntilLaser;
+    private int laserDuration=2*60;
     public SamochodLaserowy(Derby derby, int givenX, int givenY)
     {
         super(derby, givenX, givenY);
-        laserDamage = 1;
+        laserDamage=2;
+        timeUntilLaser=(generateNumber.nextInt(3)+2)*60; //Od 3 do 5sekund razy klatki na sekunde
     }
   @Override
     public void downloadImages(){
@@ -26,34 +33,95 @@ public class SamochodLaserowy extends Samochod{
             e.printStackTrace();
         }
     }
-    public void rayShooting(Samochod target) // wersja robiona dla starego movementu(czyli gora/dol prawo/lewo skos)
+    public void createRay(){
+        //patrze jak skierowany jest samochod, i wystrzeliwuje
+        if(facing=="up"){
+            ray=new Rectangle(x+23,0,4,y); // po calej mapie poczawszy od wsp. samochodu //x,y,szer,wys
+        }
+        else if(facing=="down"){
+            ray=new Rectangle(x+23,y+50,4,derby.screenY-y+50);
+        }
+        else if(facing=="left"){
+            ray=new Rectangle(0,y+23,x,4);
+        }
+        else if(facing=="right"){
+            ray=new Rectangle(x+50,y+23,derby.screenX-x+50,4);
+        }
+        rayGenerated=true;
+    }
+    public void rayShooting() // wersja robiona dla starego movementu(czyli gora/dol prawo/lewo skos)
     {
-        int targetX = target.getCurrentX();
-        int targetY = target.getCurrentY();
-        if(prevY>y)
-            a = 0;
-        else if(prevY<y)
-            a = 0;
-        else if(prevX>x)
-            a = Double.NEGATIVE_INFINITY;
-        else if(prevX<x)
-            a = Double.POSITIVE_INFINITY;
-        ray.setLine(a*y+b,y,a*derby.screenY+b,derby.screenY); // po calej mapie poczawszy od wsp. samochodu
-        if(target.getHitbox().intersects(ray.getBounds()))
-        {
-            rayDamaging(target);
+        for(Samochod car: cars){
+            if(ray.intersects(car.getHitbox()) && car.getCarId()!=carId){
+                car.sethp(car.gethp()-laserDamage);
+                checkDeath(car);
+            }
         }
     }
-    public void rayDamaging(Samochod enemy)
+    public void rayColoring(Graphics2D g2d)
     {
-        enemy.sethp(enemy.gethp()-laserDamage);
-        //zmienic na checkDeath(enemy);
-        if(enemy.gethp() <= 0)
-            enemy.setDead();
-    }
-    public void laserColoring(Graphics2D g2d)
-    {
-        g2d.setColor(Color.green);
+        g2d.setColor(laserColor);
+        if(laserDuration%8==0){
+            laserColor=new Color(generateNumber.nextInt(256),generateNumber.nextInt(256),generateNumber.nextInt(256));
+        }
         g2d.fill(ray);
+        //LOSOWY KOLOR JAK PODZIELNE PRZEZ 3 CZAS POZOSTALY ?
+    }
+    @Override
+    public void update(){
+        if(hp>0 && alive){
+            timeUntilLaser--;
+            if(timeUntilLaser<=0 && !rayGenerated && !usingNitro){
+                speed=0;
+                createRay();
+            }
+            if(rayGenerated){
+                rayShooting();
+                laserDuration--;
+                if(laserDuration==0){
+                    rayGenerated=false;
+                    timeUntilLaser=(generateNumber.nextInt(3)+2)*60;
+                    laserDuration=2*60;
+                    speed=1;
+                }
+            }
+        }
+        super.update();
+    }
+    @Override
+    public void updateOnMap(Graphics2D g2d){
+        if(hp>0){
+            if(prevY>y){
+                facing="up";
+                g2d.drawImage(up,x,y, derby.samochodSize, derby.samochodSize,null);
+            }
+            else if(prevY<y){
+                facing="down";
+                g2d.drawImage(down,x,y, derby.samochodSize, derby.samochodSize,null);
+            }
+            else if(prevX>x){
+                facing="left";
+                g2d.drawImage(left,x,y, derby.samochodSize, derby.samochodSize,null);
+            }
+            else if(prevX<x){
+                facing="right";
+                g2d.drawImage(right,x,y, derby.samochodSize, derby.samochodSize,null);
+            }
+            else if(prevX==x && prevY==y){
+                if(facing=="up")
+                    g2d.drawImage(up,x,y, derby.samochodSize, derby.samochodSize,null);
+                else if(facing=="down")
+                    g2d.drawImage(down,x,y, derby.samochodSize, derby.samochodSize,null);
+                else if(facing=="left")
+                    g2d.drawImage(left,x,y, derby.samochodSize, derby.samochodSize,null);
+                else if(facing=="right")
+                    g2d.drawImage(right,x,y, derby.samochodSize, derby.samochodSize,null);
+            }
+            if(rayGenerated){
+                rayColoring(g2d);
+            }
+        }
+        g2d.setColor(Color.red);
+        g2d.drawString(hp+" id:"+carId,x,y);
     }
 }

@@ -17,6 +17,7 @@ public class Main{
         window.setVisible(true);
         main_menu.start();
 
+        window.remove(main_menu);
         Derby derby =new Derby(main_menu.getNitra(),main_menu.getSciany(),main_menu.getWaga(),main_menu.getSamochody());
         window.add(derby);
         window.pack();

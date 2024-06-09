@@ -441,8 +441,20 @@
         public void sethp(int hp){
             this.hp=hp;
         }
+        public int getKillCount(){
+            return killCount;
+        }
+        public int getTickssurvived(){
+            return ticksSurvived;
+        }
         public boolean isAlive(){
             return alive;
+        }
+        public int getRank(){
+            return rank;
+        }
+        public int getNitrosTaken(){
+            return nitrosTaken;
         }
         public void setDead(){
             alive=false;

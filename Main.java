@@ -26,6 +26,11 @@ public class Main{
         Zapis zapis=new Zapis(derby);
         zapis.startSaving();
 
+        ZapisWynikow chart = new ZapisWynikow();
+        chart.setDataset1(czart.readFile("src/main/java/org/project/dane/explosiveCar.txt"));
+        chart.createChart(czart.getDataset1());
+        chart.setDataset2(czart.rankingReader("src/main/java/org/project/dane/rankings.txt")); 
+        chart.createRankChart(czart.getDataset2());
         /*ArrayList<Integer> samochody;
         Derby derby;
         Zapis zapis;

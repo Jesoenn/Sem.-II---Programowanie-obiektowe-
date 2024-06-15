@@ -19,7 +19,7 @@ public class Derby extends JPanel {
     public ArrayList<Nitro> nitros=new ArrayList<>();
     private Image koniecrozgrywki;
     private boolean simulationFinished=false;
-    private double simulationTime = 15.0; // czas do konca trwania symulacji w sekundach
+    private double simulationTime = 30.0; // czas do konca trwania symulacji w sekundach
     //czas wyswietlany na ekranie
     private int minutes=0;
     private int seconds=0;

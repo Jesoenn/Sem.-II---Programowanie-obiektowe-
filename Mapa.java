@@ -22,7 +22,6 @@ public class Mapa {
         generateLocation(derby.getCarsLaserAmount(),5);
         generateLocation(derby.getNitroAmount(),6);
         generateLocation(derby.getCarsTirePopersAmount(),7);
-        //generateWallsLocation(derby.getWallsAmount());
         //Wypisanie mapy w konsoli
         for(int i = 0; i< derby.squaresY; i++){
             for(int j = 0; j< derby.squaresX; j++){
@@ -73,6 +72,7 @@ public class Mapa {
             map[row][column]=symbol;
         }
     }
+    /* NIE UZYWANE POKI CO
     private void generateWallsLocation(int amount){
         Random location=new Random();
         boolean keepGenerating=false;
@@ -130,7 +130,7 @@ public class Mapa {
             }
             System.out.println();
         }
-    }
+    }*/
     public int[][] getMap(){
         return map;
     }

@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Derby extends JPanel {
-    private int nitroAmount,wallsAmount,carsNormalAmount,carsExplosiveAmount,carsTirePopersAmount,carsLaserAmount,carsWeight; //liczba wspomnianych rzeczy na mapie, jak wyzej
+    private int nitroAmount,carsNormalAmount,carsExplosiveAmount,carsTirePopersAmount,carsLaserAmount,carsWeight; //liczba wspomnianych rzeczy na mapie, jak wyzej
     public static final int samochodSize=50; //wielkosc samochodu w pixelach
     public static final int screenX=650; //rozmiar ekranu
     public static final int screenY=650;
@@ -23,9 +23,8 @@ public class Derby extends JPanel {
     //czas wyswietlany na ekranie
     private int minutes=0;
     private int seconds=0;
-    public Derby(int nitros, int walls,int weight,ArrayList<Integer> cars){
+    public Derby(int nitros,int weight,ArrayList<Integer> cars){
         nitroAmount=nitros;
-        wallsAmount=walls;
         carsWeight=weight;
         carsNormalAmount=cars.get(0);
         carsExplosiveAmount=cars.get(1);
@@ -140,9 +139,6 @@ public class Derby extends JPanel {
         }catch(Exception e){
             e.printStackTrace();
         }
-    }
-    public int getWallsAmount(){
-        return wallsAmount;
     }
     public int getCarsNormalAmount(){
         return carsNormalAmount;

@@ -18,7 +18,7 @@ public class Main{
         window.setVisible(true);
         main_menu.start();
         window.remove(main_menu);
-        Derby derby =new Derby(main_menu.getNitra(),main_menu.getSciany(),main_menu.getWaga(),main_menu.getSamochody());
+        Derby derby =new Derby(main_menu.getNitra(),main_menu.getWaga(),main_menu.getSamochody());
         window.add(derby);
         window.pack();
         derby.setStartingPositions();
@@ -27,10 +27,10 @@ public class Main{
         zapis.startSaving();
 
         ZapisWynikow chart = new ZapisWynikow();
-        chart.setDataset1(czart.readFile("src/main/java/org/project/dane/explosiveCar.txt"));
-        chart.createChart(czart.getDataset1());
-        chart.setDataset2(czart.rankingReader("src/main/java/org/project/dane/rankings.txt")); 
-        chart.createRankChart(czart.getDataset2());
+        chart.setDataset1(chart.readFile("src/main/java/org/project/dane/explosiveCar.txt"));
+        chart.createChart(chart.getDataset1());
+        chart.setDataset2(chart.rankingReader("src/main/java/org/project/dane/rankings.txt"));
+        chart.createRankChart(chart.getDataset2());
         /*ArrayList<Integer> samochody;
         Derby derby;
         Zapis zapis;

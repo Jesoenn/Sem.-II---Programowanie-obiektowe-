@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class EkranGlowny extends JPanel implements ChangeListener {
-    private Image samochod,samochodwybuchowy,samochodlaserowy,samochodoponowy,dalejImage,wall,nitro;
-    private int sciany=0,nitra=0,waga=1000;
+    private Image samochod,samochodwybuchowy,samochodlaserowy,samochodoponowy,dalejImage,nitro;
+    private int nitra=0,waga=1000;
     private ArrayList<Integer> samochody=new ArrayList<>(); //Liczba samochodow poszczegolnego rodzaju
     private ArrayList<JSlider> sliders=new ArrayList<>(); //suwaki
     /*
@@ -43,7 +43,7 @@ public class EkranGlowny extends JPanel implements ChangeListener {
             samochodlaserowy = ImageIO.read(getClass().getResource("/greencar/carGreenUp.png"));
             samochodoponowy = ImageIO.read(getClass().getResource("/bluecar/carBlueUp.png"));
             dalejImage = ImageIO.read(getClass().getResource("/extra/dalej.png"));
-            wall=ImageIO.read(getClass().getResource("/wallHorizontal.png"));
+            //wall=ImageIO.read(getClass().getResource("/wallHorizontal.png"));
             nitro=ImageIO.read(getClass().getResource("/nitro.png"));
         }catch (IOException e){
             e.printStackTrace();
@@ -69,8 +69,8 @@ public class EkranGlowny extends JPanel implements ChangeListener {
         }
         //Ustawienie, scian, nitr i napisow
         else if(etap==1){
-            g2d.drawImage(wall,80,40,100,100,null);
-            g2d.drawString("Sciany",80,30);
+            /*g2d.drawImage(wall,80,40,100,100,null);
+            g2d.drawString("Sciany",80,30);*/
             g2d.drawImage(nitro,470,40,100,100,null);
             g2d.drawString("Nitra",485,30);
         }
@@ -152,10 +152,10 @@ public class EkranGlowny extends JPanel implements ChangeListener {
             }
             sliders.clear();
             //2 nowe suwaki dla nitra i sciany
-            addSlider(0,10,1);
+            //addSlider(0,10,1);
             addSlider(0,15,1);
-            sliders.get(0).setBounds(35,150,200,80);
-            sliders.get(1).setBounds(395,150,250,80);
+            //sliders.get(0).setBounds(35,150,200,80);
+            sliders.get(0).setBounds(395,150,250,80);
             for(JSlider slider: sliders){
                 add(slider);
             }
@@ -178,8 +178,7 @@ public class EkranGlowny extends JPanel implements ChangeListener {
         }
         else if(etap==1){
             //to co dla aut, ale dla nitr i scian
-            nitra=sliders.get(1).getValue();
-            sciany=sliders.get(0).getValue();
+            nitra=sliders.get(0).getValue();
         }
         if(etap==2 && sliders.get(0).getValue()%100!=0){
             //Zeby wartosc suwaka zmieniala sie o 100, a nie o 1
@@ -187,9 +186,6 @@ public class EkranGlowny extends JPanel implements ChangeListener {
             waga=sliders.get(0).getValue();
         }
         repaint();
-    }
-    public int getSciany(){
-        return sciany;
     }
     public int getNitra(){
         return nitra;

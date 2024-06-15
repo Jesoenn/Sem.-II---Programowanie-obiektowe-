@@ -2,7 +2,10 @@ package org.project;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.io.File;
 import java.util.Random;
+import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 public class Mapa {
     private Image mapImage; //Zdjecie tła mapy
@@ -12,17 +15,47 @@ public class Mapa {
         this.derby = derby;
         map=new int[derby.squaresY][derby.squaresX]; // wiersze/kolumny
         downloadImages();
+        downloadMap();
         //generowanie lokalizacji obiektow na mapie
         generateLocation(derby.getCarsNormalAmount(),3);
         generateLocation(derby.getCarsExplosiveAmount(),4);
         generateLocation(derby.getCarsLaserAmount(),5);
         generateLocation(derby.getNitroAmount(),6);
         generateLocation(derby.getCarsTirePopersAmount(),7);
-        generateWallsLocation(derby.getWallsAmount());
+        //generateWallsLocation(derby.getWallsAmount());
+        //Wypisanie mapy w konsoli
+        for(int i = 0; i< derby.squaresY; i++){
+            for(int j = 0; j< derby.squaresX; j++){
+                System.out.print(map[i][j]);
+            }
+            System.out.println();
+        }
     }
     private void downloadImages(){
         try{
             mapImage=ImageIO.read(getClass().getResource("/mapa.png"));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    private void downloadMap(){
+        Random number=new Random();
+        int mapId=number.nextInt(3)+1;
+        System.out.println("WYBRANA MAPA: "+mapId);
+        int line=0;
+        String text;
+        String mapName="src/main/java/org/project/maps/map"+mapId+".txt";
+        try{
+            File mapFile=new File(mapName);
+            Scanner reader=new Scanner(mapFile);
+            while(reader.hasNextLine()){
+                text=reader.nextLine();
+                for(int i=0; i<text.length(); i++){
+                    map[line][i]=Character.getNumericValue(text.charAt(i));
+                }
+                line++;
+            }
+            reader.close();
         }catch(Exception e){
             e.printStackTrace();
         }
